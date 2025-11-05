@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .checkout-header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .checkout-form {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .order-summary {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .summary-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: none;
+        }
+        
+        .place-order-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .place-order-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .place-order-btn:disabled {
+            background: var(--medium-gray);
+            cursor: not-allowed;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .payment-method {
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(44, 85, 48, 0.05);
+        }
+        
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-method.mtn { color: #ffcc00; }
+        .payment-method.airtel { color: #e60a14; }
+        .payment-method.credit-card { color: var(--primary); }
+        
+        .momo-form {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .momo-form.active {
+            display: block;
+        }
+        
+        .order-items {
+            margin-top: 1rem;
+        }
+        
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-image {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .item-details {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-price {
+            color: var(--primary);
+        }
+        
+        .item-quantity {
+            color: var(--medium-gray);
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #2e7d32;
+            display: none;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #c62828;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <div id="auth-buttons">
+                    <a href="login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+                <a href="cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="all-products.html">All Products</a></li>
+                <li><a href="deals.html">Today's Deals</a></li>
+                <li><a href="categories/groceries.html">Groceries</a></li>
+                <li><a href="categories/electronics.html">Electronics</a></li>
+                <li><a href="categories/fashion.html">Fashion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>></span>
+                <a href="cart.html">Cart</a>
+                <span>></span>
+                <span>Checkout</span>
+            </div>
+            
+            <div class="checkout-container">
+                <div class="checkout-header">
+                    <h1>Checkout</h1>
+                    <p>Complete your order with secure payment</p>
+                </div>
+                
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="success-text"></span>
+                </div>
+                
+                <div class="error-message" id="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text"></span>
+                </div>
+                
+                <div class="checkout-content">
+                    <div class="checkout-form">
+                        <form id="checkout-form">
+                            <div class="form-section">
+                                <h3>Delivery Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name *</label>
+                                        <input type="text" id="firstName" name="firstName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name *</label>
+                                        <input type="text" id="lastName" name="lastName" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" placeholder="+256 XXX XXX XXX" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Delivery Location *</label>
+                                    <select id="location" name="location" required>
+                                        <option value="">Select Location</option>
+                                        <option value="kampala-central">Kampala Central</option>
+                                        <option value="nakawa">Nakawa Division</option>
+                                        <option value="makindye">Makindye Division</option>
+                                        <option value="kawempe">Kawempe Division</option>
+                                        <option value="rubaga">Rubaga Division</option>
+                                        <option value="central">Central Division</option>
+                                        <option value="entebbe">Entebbe</option>
+                                        <option value="mukono">Mukono</option>
+                                        <option value="kira">Kira</option>
+                                        <option value="nsambya">Nsambya</option>
+                                        <option value="bukoto">Bukoto</option>
+                                        <option value="naalya">Naalya</option>
+                                        <option value="bunga">Bunga</option>
+                                        <option value="muyenga">Muyenga</option>
+                                        <option value="kansanga">Kansanga</option>
+                                        <option value="kabalagala">Kabalagala</option>
+                                        <option value="other">Other (Specify in Address)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Detailed Address *</label>
+                                    <input type="text" id="address" name="address" placeholder="Building name, street, landmark, etc." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="deliveryNotes">Delivery Notes (Optional)</label>
+                                    <textarea id="deliveryNotes" name="deliveryNotes" rows="3" placeholder="Any special delivery instructions..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3>Payment Method</h3>
+                                <div class="payment-methods">
+                                    <div class="payment-method mtn" data-method="mtn-momo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div>MTN Mobile Money</div>
+                                    </div>
+                                    <div class="payment-method airtel" data-method="airtel-momo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div>Airtel Money</div>
+                                    </div>
+                                    <div class="payment-method credit-card" data-method="credit-card">
+                                        <i class="fas fa-credit-card"></i>
+                                        <div>Credit Card</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- MTN Mobile Money Form -->
+                                <div id="mtn-momo-form" class="momo-form">
+                                    <div class="form-group">
+                                        <label for="mtnPhone">MTN Phone Number *</label>
+                                        <input type="tel" id="mtnPhone" name="mtnPhone" placeholder="+256 XXX XXX XXX">
+                                    </div>
+                                    <div class="form-group">
+                                        <p style="font-size: 0.9rem; color: var(--medium-gray);">
+                                            <i class="fas fa-info-circle"></i>
+                                            You will receive a Mobile Money prompt to complete payment
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Airtel Money Form -->
+                                <div id="airtel-momo-form" class="momo-form">
+                                    <div class="form-group">
+                                        <label for="airtelPhone">Airtel Phone Number *</label>
+                                        <input type="tel" id="airtelPhone" name="airtelPhone" placeholder="+256 XXX XXX XXX">
+                                    </div>
+                                    <div class="form-group">
+                                        <p style="font-size: 0.9rem; color: var(--medium-gray);">
+                                            <i class="fas fa-info-circle"></i>
+                                            You will receive an Airtel Money prompt to complete payment
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Credit Card Form -->
+                                <div id="credit-card-form" class="momo-form">
+                                    <div class="form-group">
+                                        <label for="cardNumber">Card Number *</label>
+                                        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expiryDate">Expiry Date *</label>
+                                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv">CVV *</label>
+                                            <input type="text" id="cvv" name="cvv" placeholder="123">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardName">Name on Card *</label>
+                                        <input type="text" id="cardName" name="cardName">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="order-items" id="order-items">
+                            <!-- Order items will be loaded here -->
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">UGX 0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Delivery Fee:</span>
+                            <span id="delivery">UGX 5,000</span>
+                        </div>
+                        <div class="summary-item summary-total">
+                            <span>Total:</span>
+                            <span id="total">UGX 0</span>
+                        </div>
+                        
+                        <button class="place-order-btn" id="place-order-btn">
+                            Place Order
+                        </button>
+                        
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <p style="font-size: 0.8rem; color: var(--medium-gray);">
+                                <i class="fas fa-lock"></i>
+                                Your payment is secure and encrypted
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+            setupEventListeners();
+            loadFooter();
+            updateUserDisplay();
+            updateCartCount();
+            prefillUserInfo();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2024 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', selectPaymentMethod);
+            });
+
+            // Place order button
+            const placeOrderBtn = document.getElementById('place-order-btn');
+            if (placeOrderBtn) {
+                placeOrderBtn.addEventListener('click', placeOrder);
+            }
+
+            // Logout button
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Load order summary
+        function loadOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const orderItemsContainer = document.getElementById('order-items');
+            
+            if (cart.length === 0) {
+                orderItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+                updateOrderSummary(0);
+                document.getElementById('place-order-btn').disabled = true;
+                return;
+            }
+            
+            orderItemsContainer.innerHTML = '';
+            
+            cart.forEach(item => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                orderItem.innerHTML = `
+                    <div class="item-image">${item.image}</div>
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">UGX ${(item.price * 3700).toLocaleString()}</div>
+                        <div class="item-quantity">Qty: ${item.quantity}</div>
+                    </div>
+                `;
+                orderItemsContainer.appendChild(orderItem);
+            });
+            
+            updateOrderSummary();
+        }
+
+        // Update order summary (converted to UGX)
+        function updateOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const subtotalUSD = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotalUGX = subtotalUSD * 3700; // Convert to UGX
+            const deliveryUGX = 5000; // Fixed delivery fee in UGX
+            const totalUGX = subtotalUGX + deliveryUGX;
+            
+            document.getElementById('subtotal').textContent = `UGX ${subtotalUGX.toLocaleString()}`;
+            document.getElementById('delivery').textContent = `UGX ${deliveryUGX.toLocaleString()}`;
+            document.getElementById('total').textContent = `UGX ${totalUGX.toLocaleString()}`;
+        }
+
+        // Select payment method
+        function selectPaymentMethod(e) {
+            // Remove selected class from all methods
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.classList.remove('selected');
+            });
+            
+            // Hide all payment forms
+            document.querySelectorAll('.momo-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Add selected class to clicked method
+            const method = e.currentTarget;
+            method.classList.add('selected');
+            
+            // Show the corresponding payment form
+            const paymentMethod = method.dataset.method;
+            const paymentForm = document.getElementById(`${paymentMethod}-form`);
+            if (paymentForm) {
+                paymentForm.classList.add('active');
+            }
+        }
+
+        // Prefill user information if logged in
+        function prefillUserInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser) {
+                document.getElementById('email').value = currentUser.email;
+                
+                // If user data is stored separately, you could prefill more fields
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.email === currentUser.email);
+                
+                if (user) {
+                    document.getElementById('firstName').value = user.firstName || '';
+                    document.getElementById('lastName').value = user.lastName || '';
+                    document.getElementById('phone').value = user.phone || '';
+                }
+            }
+        }
+
+        // Place order
+        function placeOrder() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            if (cart.length === 0) {
+                showError('Your cart is empty!');
+                return;
+            }
+            
+            // Validate form
+            if (!validateForm()) {
+                showError('Please fill in all required fields and select a payment method.');
+                return;
+            }
+            
+            // Get selected payment method
+            const selectedMethod = document.querySelector('.payment-method.selected');
+            if (!selectedMethod) {
+                showError('Please select a payment method.');
+                return;
+            }
+            
+            // Validate payment method specific fields
+            if (!validatePaymentMethod(selectedMethod.dataset.method)) {
+                return;
+            }
+            
+            // Show loading state
+            const placeOrderBtn = document.getElementById('place-order-btn');
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            // Simulate order processing
+            setTimeout(() => {
+                // Create order object
+                const order = {
+                    id: Date.now().toString(),
+                    items: cart,
+                    total: document.getElementById('total').textContent,
+                    deliveryInfo: {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        location: document.getElementById('location').value,
+                        address: document.getElementById('address').value,
+                        deliveryNotes: document.getElementById('deliveryNotes').value
+                    },
+                    paymentMethod: selectedMethod.dataset.method,
+                    paymentDetails: getPaymentDetails(selectedMethod.dataset.method),
+                    orderDate: new Date().toLocaleString('en-UG')
+                };
+                
+                // Save order to localStorage
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Clear cart
+                localStorage.removeItem('cart');
+                
+                // Show success message
+                showSuccess('Order placed successfully! You will receive a payment prompt shortly.');
+                
+                // Redirect to order confirmation after delay
+                setTimeout(() => {
+                    window.location.href = 'order-confirmation.html?orderId=' + order.id;
+                }, 3000);
+                
+            }, 2000);
+        }
+
+        // Validate form
+        function validateForm() {
+            const requiredFields = [
+                'firstName', 'lastName', 'email', 'phone', 'location', 'address'
+            ];
+            
+            for (const fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Validate payment method specific fields
+        function validatePaymentMethod(method) {
+            switch(method) {
+                case 'mtn-momo':
+                    const mtnPhone = document.getElementById('mtnPhone').value.trim();
+                    if (!mtnPhone) {
+                        showError('Please enter your MTN phone number.');
+                        return false;
+                    }
+                    break;
+                    
+                case 'airtel-momo':
+                    const airtelPhone = document.getElementById('airtelPhone').value.trim();
+                    if (!airtelPhone) {
+                        showError('Please enter your Airtel phone number.');
+                        return false;
+                    }
+                    break;
+                    
+                case 'credit-card':
+                    const cardNumber = document.getElementById('cardNumber').value.trim();
+                    const expiryDate = document.getElementById('expiryDate').value.trim();
+                    const cvv = document.getElementById('cvv').value.trim();
+                    const cardName = document.getElementById('cardName').value.trim();
+                    
+                    if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                        showError('Please fill in all credit card details.');
+                        return false;
+                    }
+                    break;
+            }
+            
+            return true;
+        }
+
+        // Get payment details based on method
+        function getPaymentDetails(method) {
+            switch(method) {
+                case 'mtn-momo':
+                    return { phone: document.getElementById('mtnPhone').value };
+                case 'airtel-momo':
+                    return { phone: document.getElementById('airtelPhone').value };
+                case 'credit-card':
+                    return { 
+                        cardNumber: document.getElementById('cardNumber').value,
+                        expiryDate: document.getElementById('expiryDate').value
+                    };
+                default:
+                    return {};
+            }
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            const successText = document.getElementById('success-text');
+            successText.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            const loginText = document.getElementById('login-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+                
+                if (loginText) {
+                    loginText.textContent = currentUser.name.split(' ')[0];
+                }
+            } else {
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+                
+                if (loginText) {
+                    loginText.textContent = 'Login';
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            alert('You have been logged out successfully!');
+            window.location.reload();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+    </script>
+</body>
+</html>

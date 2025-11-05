@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shell Rimula Express Supermarket - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <div id="auth-buttons">
+                    <a href="login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+                <a href="cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="all-products.html">All Products</a></li>
+                <li><a href="deals.html">Today's Deals</a></li>
+                <li><a href="categories/groceries.html">Groceries</a></li>
+                <li><a href="categories/electronics.html">Electronics</a></li>
+                <li><a href="categories/fashion.html">Fashion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="hero">
+                <h1>Welcome to Shell Rimula Express Supermarket</h1>
+                <p>Your one-stop online shop for all your grocery and household needs. Quality products at affordable prices delivered to your doorstep.</p>
+                <a href="all-products.html" class="btn">Shop Now</a>
+            </div>
+            
+            <h2>Shop by Category</h2>
+            <div class="categories">
+                <a href="all-products.html" class="category">
+                    <i class="fas fa-th-large"></i>
+                    <div>All Products</div>
+                </a>
+                <a href="categories/groceries.html" class="category">
+                    <i class="fas fa-shopping-basket"></i>
+                    <div>Groceries</div>
+                </a>
+                <a href="categories/drinks.html" class="category">
+                    <i class="fas fa-wine-bottle"></i>
+                    <div>Drinks</div>
+                </a>
+                <a href="categories/snacks.html" class="category">
+                    <i class="fas fa-cookie"></i>
+                    <div>Snacks</div>
+                </a>
+                <a href="categories/personal-care.html" class="category">
+                    <i class="fas fa-soap"></i>
+                    <div>Personal Care</div>
+                </a>
+                <a href="categories/household.html" class="category">
+                    <i class="fas fa-home"></i>
+                    <div>Household</div>
+                </a>
+                <a href="categories/baby-care.html" class="category">
+                    <i class="fas fa-baby"></i>
+                    <div>Baby Care</div>
+                </a>
+                <a href="categories/electronics.html" class="category">
+                    <i class="fas fa-laptop"></i>
+                    <div>Electronics</div>
+                </a>
+            </div>
+            
+            <h2>Featured Products</h2>
+            <div class="product-grid" id="featured-products">
+                <!-- Featured products will be loaded here -->
+            </div>
+            
+            <h2>Today's Deals</h2>
+            <div class="product-grid" id="deals-products">
+                <!-- Today's deals will be loaded here -->
+            </div>
+            
+            <h2>Popular Categories</h2>
+            <div class="featured-categories">
+                <a href="categories/groceries.html" class="featured-category">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Food & Beverages</h3>
+                    <p>Fresh produce, dairy, meat and beverages</p>
+                </a>
+                <a href="categories/personal-care.html" class="featured-category">
+                    <i class="fas fa-pump-soap"></i>
+                    <h3>Personal Care</h3>
+                    <p>Skincare, haircare, oral care and more</p>
+                </a>
+                <a href="categories/electronics.html" class="featured-category">
+                    <i class="fas fa-tv"></i>
+                    <h3>Electronics</h3>
+                    <p>Smartphones, laptops, accessories</p>
+                </a>
+                <a href="categories/fashion.html" class="featured-category">
+                    <i class="fas fa-tshirt"></i>
+                    <h3>Fashion</h3>
+                    <p>Clothing, shoes and accessories</p>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Product data
+        const products = [
+            // Groceries
+            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "🥛", discount: 0 },
+            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "🍞", discount: 10 },
+            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "🥚", discount: 0 },
+            { id: 4, name: "Bananas (1kg)", price: 1.99, category: "groceries", image: "🍌", discount: 5 },
+            { id: 5, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", image: "🍗", discount: 0 },
+            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "🍝", discount: 15 },
+            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "🍅", discount: 0 },
+            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "🍚", discount: 0 },
+            
+            // Drinks
+            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 20 },
+            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "🥤", discount: 0 },
+            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "💧", discount: 0 },
+            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 10 },
+            
+            // Snacks
+            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "🥔", discount: 15 },
+            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "🍫", discount: 0 },
+            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "🍪", discount: 25 },
+            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "🍿", discount: 0 },
+            
+            // Personal Care
+            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "🧴", discount: 20 },
+            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "🧴", discount: 0 },
+            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "🦷", discount: 10 },
+            { id: 40, name: "Deodorant", price: 4.00, category: "personal-care", image: "🧴", discount: 0 },
+            
+            // Electronics
+            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "🎧", discount: 30 },
+            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "🔌", discount: 0 },
+            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "🔊", discount: 25 },
+            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "🔌", discount: 0 }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            loadDealsProducts();
+            setupEventListeners();
+            loadFooter();
+            updateUserDisplay();
+            updateCartCount();
+            setupLogoutButton();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                // Redirect to all products page with search
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Load featured products
+        function loadFeaturedProducts() {
+            const featuredContainer = document.getElementById('featured-products');
+            if (!featuredContainer) return;
+            
+            featuredContainer.innerHTML = '';
+            const featuredProducts = products.slice(0, 8);
+            
+            featuredProducts.forEach(product => {
+                featuredContainer.appendChild(createProductCard(product));
+            });
+        }
+
+        // Load deals products
+        function loadDealsProducts() {
+            const dealsContainer = document.getElementById('deals-products');
+            if (!dealsContainer) return;
+            
+            dealsContainer.innerHTML = '';
+            const dealProducts = products.filter(product => product.discount > 0).slice(0, 8);
+            
+            dealProducts.forEach(product => {
+                dealsContainer.appendChild(createProductCard(product, true));
+            });
+        }
+
+        // Create product card
+        function createProductCard(product, showDiscount = false) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const discountPrice = product.discount > 0 ? 
+                (product.price * (1 - product.discount / 100)).toFixed(2) : null;
+            
+            card.innerHTML = `
+                ${product.discount > 0 && showDiscount ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
+                <div class="product-image">${product.image}</div>
+                <h3>${product.name}</h3>
+                <div class="product-price">
+                    ${discountPrice && showDiscount ? 
+                        `<span class="original-price">$${product.price.toFixed(2)}</span>
+                         <span class="discount-price">$${discountPrice}</span>` :
+                        `$${product.price.toFixed(2)}`
+                    }
+                </div>
+                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+            `;
+            
+            const addToCartBtn = card.querySelector('.add-to-cart');
+            addToCartBtn.addEventListener('click', () => addToCart(product));
+            
+            return card;
+        }
+
+        // Add to cart function
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.discount > 0 ? 
+                        (product.price * (1 - product.discount / 100)) : product.price,
+                    quantity: 1,
+                    image: product.image
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show confirmation
+            alert(`${product.name} added to cart!`);
+        }
+
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            const loginText = document.getElementById('login-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                // User is logged in
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+                
+                // Update login text to show user is logged in (for other pages)
+                if (loginText) {
+                    loginText.textContent = currentUser.name.split(' ')[0]; // First name only
+                }
+            } else {
+                // User is not logged in
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+                
+                if (loginText) {
+                    loginText.textContent = 'Login';
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            
+            // Show logout success message
+            alert('You have been logged out successfully!');
+            
+            // Refresh the page to update the UI
+            window.location.reload();
+        }
+
+        // Setup logout button event listener
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+    </script>
+</body>
+</html>

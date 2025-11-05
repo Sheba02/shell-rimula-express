@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Deals - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .deal-badge {
+            background-color: #f44336;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .product-card {
+            position: relative;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--medium-gray);
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .discount-price {
+            color: #f44336;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .time-left {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .time-left h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .deal-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+        
+        .deal-category {
+            background-color: var(--section-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .deal-category.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .deal-category:hover {
+            transform: translateY(-2px);
+        }
+        
+        .deal-section {
+            margin-bottom: 3rem;
+        }
+        
+        .deal-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <a href="login.html" id="nav-login">
+                    <i class="fas fa-user"></i>
+                    <span id="login-text">Login</span>
+                </a>
+                <a href="cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="all-products.html">All Products</a></li>
+                <li><a href="deals.html" class="active">Today's Deals</a></li>
+                <li><a href="categories/groceries.html">Groceries</a></li>
+                <li><a href="categories/electronics.html">Electronics</a></li>
+                <li><a href="categories/fashion.html">Fashion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>></span>
+                <span>Today's Deals</span>
+            </div>
+            
+            <div class="category-hero">
+                <h1>Today's Deals</h1>
+                <p>Limited time offers and special discounts on selected products. Hurry, these deals won't last long!</p>
+            </div>
+            
+            <div class="time-left">
+                <h3>⏰ Flash Sale Ends In: <span id="countdown">23:59:59</span></h3>
+                <p>Don't miss out on these amazing discounts!</p>
+            </div>
+            
+            <div class="deal-categories">
+                <div class="deal-category active" data-category="all">All Deals</div>
+                <div class="deal-category" data-category="groceries">Groceries</div>
+                <div class="deal-category" data-category="drinks">Drinks</div>
+                <div class="deal-category" data-category="snacks">Snacks</div>
+                <div class="deal-category" data-category="personal-care">Personal Care</div>
+                <div class="deal-category" data-category="household">Household</div>
+                <div class="deal-category" data-category="baby-care">Baby Care</div>
+                <div class="deal-category" data-category="electronics">Electronics</div>
+            </div>
+            
+            <div class="deal-section">
+                <h3>🔥 Flash Sale - Up to 70% OFF</h3>
+                <div class="product-grid" id="flash-sale-products">
+                    <!-- Flash sale products will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="deal-section">
+                <h3>⭐ Popular Deals</h3>
+                <div class="product-grid" id="popular-deals-products">
+                    <!-- Popular deals products will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="deal-section">
+                <h3>🛒 Best Sellers on Sale</h3>
+                <div class="product-grid" id="bestseller-deals-products">
+                    <!-- Bestseller deals products will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="deal-section">
+                <h3>💎 Luxury Items on Discount</h3>
+                <div class="product-grid" id="luxury-deals-products">
+                    <!-- Luxury deals products will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Extended product data with many more deals
+        const products = [
+            // Flash Sale - High Discounts
+            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "🥛", discount: 40, type: "flash" },
+            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "🍝", discount: 60, type: "flash" },
+            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 50, type: "flash" },
+            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "🥔", discount: 55, type: "flash" },
+            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "🧴", discount: 45, type: "flash" },
+            { id: 49, name: "Laundry Detergent", price: 8.99, category: "household", image: "🧼", discount: 35, type: "flash" },
+            { id: 61, name: "Baby Diapers (30 count)", price: 12.99, category: "baby-care", image: "👶", discount: 30, type: "flash" },
+            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "🎧", discount: 70, type: "flash" },
+            
+            // Popular Deals - Medium Discounts
+            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "🍞", discount: 25, type: "popular" },
+            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "🥤", discount: 20, type: "popular" },
+            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "🍫", discount: 30, type: "popular" },
+            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "🧴", discount: 25, type: "popular" },
+            { id: 50, name: "Dish Soap", price: 2.50, category: "household", image: "🧼", discount: 15, type: "popular" },
+            { id: 62, name: "Baby Wipes (80 count)", price: 4.75, category: "baby-care", image: "🧻", discount: 20, type: "popular" },
+            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "🔌", discount: 40, type: "popular" },
+            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "🍪", discount: 35, type: "popular" },
+            
+            // Bestseller Deals
+            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "🥚", discount: 15, type: "bestseller" },
+            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "💧", discount: 10, type: "bestseller" },
+            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "🍿", discount: 25, type: "bestseller" },
+            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "🦷", discount: 20, type: "bestseller" },
+            { id: 51, name: "Toilet Paper (12 rolls)", price: 6.99, category: "household", image: "🧻", discount: 18, type: "bestseller" },
+            { id: 63, name: "Baby Shampoo", price: 5.25, category: "baby-care", image: "🧴", discount: 22, type: "bestseller" },
+            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "🔊", discount: 45, type: "bestseller" },
+            { id: 41, name: "Face Cream", price: 8.75, category: "personal-care", image: "🧴", discount: 30, type: "bestseller" },
+            
+            // Luxury Deals - High Value Items
+            { id: 19, name: "Coffee (250g)", price: 6.75, category: "drinks", image: "☕", discount: 25, type: "luxury" },
+            { id: 20, name: "Red Wine", price: 12.99, category: "drinks", image: "🍷", discount: 30, type: "luxury" },
+            { id: 29, name: "Nuts Mix (200g)", price: 5.50, category: "snacks", image: "🥜", discount: 20, type: "luxury" },
+            { id: 42, name: "Perfume", price: 25.99, category: "personal-care", image: "💨", discount: 40, type: "luxury" },
+            { id: 43, name: "Razor Blades (4 pack)", price: 12.50, category: "personal-care", image: "🪒", discount: 35, type: "luxury" },
+            { id: 56, name: "Batteries (AA, 8 pack)", price: 7.50, category: "household", image: "🔋", discount: 15, type: "luxury" },
+            { id: 77, name: "Power Bank", price: 24.99, category: "electronics", image: "🔋", discount: 50, type: "luxury" },
+            { id: 78, name: "Smartwatch", price: 89.99, category: "electronics", image: "⌚", discount: 60, type: "luxury" },
+            
+            // Additional Deals to make it more comprehensive
+            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "🍅", discount: 20, type: "popular" },
+            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 25, type: "popular" },
+            { id: 30, name: "Granola Bars (6 pack)", price: 4.25, category: "snacks", image: "🍫", discount: 30, type: "flash" },
+            { id: 44, name: "Hair Gel", price: 5.25, category: "personal-care", image: "🧴", discount: 20, type: "popular" },
+            { id: 52, name: "Paper Towels (6 rolls)", price: 5.50, category: "household", image: "🧻", discount: 15, type: "bestseller" },
+            { id: 64, name: "Baby Food (4 jars)", price: 6.50, category: "baby-care", image: "🍎", discount: 18, type: "bestseller" },
+            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "🔌", discount: 25, type: "popular" },
+            { id: 79, name: "Tablet Case", price: 15.99, category: "electronics", image: "📱", discount: 40, type: "luxury" },
+            
+            // More deals for variety
+            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "🍚", discount: 10, type: "bestseller" },
+            { id: 17, name: "Energy Drink", price: 2.00, category: "drinks", image: "⚡", discount: 15, type: "popular" },
+            { id: 31, name: "Pretzels", price: 2.75, category: "snacks", image: "🥨", discount: 20, type: "bestseller" },
+            { id: 45, name: "Sunscreen", price: 9.99, category: "personal-care", image: "🧴", discount: 25, type: "luxury" },
+            { id: 53, name: "All-Purpose Cleaner", price: 3.75, category: "household", image: "🧴", discount: 12, type: "popular" },
+            { id: 65, name: "Baby Lotion", price: 4.99, category: "baby-care", image: "🧴", discount: 20, type: "bestseller" },
+            { id: 80, name: "Wireless Mouse", price: 19.99, category: "electronics", image: "🖱️", discount: 35, type: "flash" },
+            { id: 81, name: "HDMI Cable", price: 9.99, category: "electronics", image: "🔌", discount: 30, type: "popular" }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllDeals();
+            setupEventListeners();
+            loadFooter();
+            updateCartCount();
+            startCountdown();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // Deal category filters
+            document.querySelectorAll('.deal-category').forEach(category => {
+                category.addEventListener('click', handleCategoryFilter);
+            });
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                // Redirect to all products page with search
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Handle category filter
+        function handleCategoryFilter(e) {
+            const category = e.currentTarget.getAttribute('data-category');
+            
+            // Update active category
+            document.querySelectorAll('.deal-category').forEach(cat => {
+                cat.classList.remove('active');
+            });
+            e.currentTarget.classList.add('active');
+            
+            // Filter products
+            filterDealsByCategory(category);
+        }
+
+        // Filter deals by category
+        function filterDealsByCategory(category) {
+            if (category === 'all') {
+                loadAllDeals();
+                return;
+            }
+            
+            const filteredProducts = products.filter(product => product.category === category);
+            displayFilteredDeals(filteredProducts);
+        }
+
+        // Display filtered deals
+        function displayFilteredDeals(filteredProducts) {
+            // Clear all sections
+            document.getElementById('flash-sale-products').innerHTML = '';
+            document.getElementById('popular-deals-products').innerHTML = '';
+            document.getElementById('bestseller-deals-products').innerHTML = '';
+            document.getElementById('luxury-deals-products').innerHTML = '';
+            
+            // Group by deal type
+            const flashDeals = filteredProducts.filter(product => product.type === 'flash');
+            const popularDeals = filteredProducts.filter(product => product.type === 'popular');
+            const bestsellerDeals = filteredProducts.filter(product => product.type === 'bestseller');
+            const luxuryDeals = filteredProducts.filter(product => product.type === 'luxury');
+            
+            // Display each group
+            flashDeals.forEach(product => {
+                document.getElementById('flash-sale-products').appendChild(createProductCard(product));
+            });
+            
+            popularDeals.forEach(product => {
+                document.getElementById('popular-deals-products').appendChild(createProductCard(product));
+            });
+            
+            bestsellerDeals.forEach(product => {
+                document.getElementById('bestseller-deals-products').appendChild(createProductCard(product));
+            });
+            
+            luxuryDeals.forEach(product => {
+                document.getElementById('luxury-deals-products').appendChild(createProductCard(product));
+            });
+        }
+
+        // Load all deals
+        function loadAllDeals() {
+            const flashDeals = products.filter(product => product.type === 'flash');
+            const popularDeals = products.filter(product => product.type === 'popular');
+            const bestsellerDeals = products.filter(product => product.type === 'bestseller');
+            const luxuryDeals = products.filter(product => product.type === 'luxury');
+            
+            // Display flash sale products
+            flashDeals.forEach(product => {
+                document.getElementById('flash-sale-products').appendChild(createProductCard(product));
+            });
+            
+            // Display popular deals
+            popularDeals.forEach(product => {
+                document.getElementById('popular-deals-products').appendChild(createProductCard(product));
+            });
+            
+            // Display bestseller deals
+            bestsellerDeals.forEach(product => {
+                document.getElementById('bestseller-deals-products').appendChild(createProductCard(product));
+            });
+            
+            // Display luxury deals
+            luxuryDeals.forEach(product => {
+                document.getElementById('luxury-deals-products').appendChild(createProductCard(product));
+            });
+        }
+
+        // Create product card
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const discountPrice = (product.price * (1 - product.discount / 100)).toFixed(2);
+            const savings = (product.price - discountPrice).toFixed(2);
+            
+            card.innerHTML = `
+                <div class="deal-badge">${product.discount}% OFF</div>
+                <div class="product-image">${product.image}</div>
+                <h3>${product.name}</h3>
+                <div class="product-price">
+                    <span class="original-price">$${product.price.toFixed(2)}</span>
+                    <span class="discount-price">$${discountPrice}</span>
+                </div>
+                <div style="color: #4caf50; font-size: 0.8rem; margin: 0.5rem 0;">
+                    You save: $${savings}
+                </div>
+                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+            `;
+            
+            const addToCartBtn = card.querySelector('.add-to-cart');
+            addToCartBtn.addEventListener('click', () => addToCart(product, discountPrice));
+            
+            return card;
+        }
+
+        // Add to cart function
+        function addToCart(product, discountPrice) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: parseFloat(discountPrice),
+                    originalPrice: product.price,
+                    discount: product.discount,
+                    quantity: 1,
+                    image: product.image
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show confirmation
+            alert(`${product.name} added to cart! You saved $${(product.price - discountPrice).toFixed(2)}!`);
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+            }
+        }
+
+        // Countdown timer
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            let timeLeft = 24 * 60 * 60; // 24 hours in seconds
+            
+            function updateCountdown() {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                
+                countdownElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
+                } else {
+                    // Reset timer when it reaches 0
+                    timeLeft = 24 * 60 * 60;
+                }
+            }
+            
+            // Update immediately and then every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+    </script>
+</body>
+</html>

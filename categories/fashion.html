@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .subcategories {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .subcategory {
+            background-color: var(--section-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .subcategory.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .subcategory:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        
+        .deal-badge {
+            background-color: #f44336;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .product-card {
+            position: relative;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--medium-gray);
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .discount-price {
+            color: #f44336;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .product-details {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            margin: 0.5rem 0;
+        }
+        
+        .rating {
+            color: #ffc107;
+            margin: 0.5rem 0;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 0.3rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            padding: 0.2rem 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 3px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        
+        .size-option.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .featured-section {
+            margin-bottom: 3rem;
+        }
+        
+        .featured-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .color-options {
+            display: flex;
+            gap: 0.3rem;
+            margin: 0.5rem 0;
+        }
+        
+        .color-option {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--light-gray);
+            cursor: pointer;
+        }
+        
+        .color-option.selected {
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="../index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <a href="../login.html" id="nav-login">
+                    <i class="fas fa-user"></i>
+                    <span id="login-text">Login</span>
+                </a>
+                <a href="../cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../all-products.html">All Products</a></li>
+                <li><a href="../deals.html">Today's Deals</a></li>
+                <li><a href="groceries.html">Groceries</a></li>
+                <li><a href="electronics.html">Electronics</a></li>
+                <li><a href="fashion.html" class="active">Fashion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>></span>
+                <span>Fashion</span>
+            </div>
+            
+            <div class="category-hero">
+                <h1>Fashion</h1>
+                <p>Trendy clothing, shoes, accessories, and everything you need to express your personal style</p>
+            </div>
+            
+            <div class="subcategories">
+                <div class="subcategory active" data-subcategory="all">All Fashion</div>
+                <div class="subcategory" data-subcategory="mens-clothing">Men's Clothing</div>
+                <div class="subcategory" data-subcategory="womens-clothing">Women's Clothing</div>
+                <div class="subcategory" data-subcategory="shoes">Shoes</div>
+                <div class="subcategory" data-subcategory="accessories">Accessories</div>
+                <div class="subcategory" data-subcategory="bags">Bags</div>
+                <div class="subcategory" data-subcategory="jewelry">Jewelry</div>
+                <div class="subcategory" data-subcategory="watches">Watches</div>
+                <div class="subcategory" data-subcategory="kids">Kids Fashion</div>
+            </div>
+            
+            <div class="featured-section">
+                <h3>👗 New Arrivals</h3>
+                <div class="product-grid" id="new-arrivals">
+                    <!-- New arrivals will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="featured-section">
+                <h3>🔥 Trending Now</h3>
+                <div class="product-grid" id="trending-now">
+                    <!-- Trending products will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="products-header">
+                <h2 class="category-title">All Fashion Items</h2>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="fashion-search-input" placeholder="Search fashion...">
+                </div>
+            </div>
+            
+            <div class="product-grid" id="fashion-products">
+                <!-- Fashion products will be loaded here -->
+            </div>
+            
+            <div class="pagination" id="fashion-pagination">
+                <!-- Pagination buttons will be added here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Extensive fashion product data
+        const fashionProducts = [
+            // Men's Clothing
+            { id: 301, name: "Men's Classic T-Shirt", price: 24.99, category: "fashion", subcategory: "mens-clothing", image: "👕", discount: 15, details: "100% Cotton, Regular Fit", rating: 4.5, sizes: ["S", "M", "L", "XL"], colors: ["#000000", "#2F4F4F", "#FFFFFF"], type: "trending" },
+            { id: 302, name: "Men's Slim Fit Jeans", price: 59.99, category: "fashion", subcategory: "mens-clothing", image: "👖", discount: 20, details: "Denim, Stretch Fabric", rating: 4.6, sizes: ["30x32", "32x32", "34x32", "36x32"], colors: ["#000080", "#000000"], type: "new" },
+            { id: 303, name: "Men's Casual Shirt", price: 45.99, category: "fashion", subcategory: "mens-clothing", image: "👔", discount: 10, details: "Cotton Blend, Button-Down", rating: 4.4, sizes: ["S", "M", "L", "XL"], colors: ["#FFFFFF", "#0000FF", "#FF0000"], type: "trending" },
+            { id: 304, name: "Men's Hooded Sweatshirt", price: 49.99, category: "fashion", subcategory: "mens-clothing", image: "🧥", discount: 25, details: "Fleece Lined, Kangaroo Pocket", rating: 4.7, sizes: ["S", "M", "L", "XL"], colors: ["#808080", "#000000", "#800000"], type: "new" },
+            { id: 305, name: "Men's Formal Suit", price: 199.99, category: "fashion", subcategory: "mens-clothing", image: "👔", discount: 30, details: "Wool Blend, 2-Piece Set", rating: 4.8, sizes: ["38R", "40R", "42R", "44R"], colors: ["#000000", "#2F4F4F"], type: "trending" },
+            { id: 306, name: "Men's Shorts", price: 34.99, category: "fashion", subcategory: "mens-clothing", image: "🩳", discount: 15, details: "Cotton, Elastic Waist", rating: 4.3, sizes: ["S", "M", "L", "XL"], colors: ["#000000", "#006400", "#8B4513"], type: "new" },
+            { id: 307, name: "Men's Winter Jacket", price: 129.99, category: "fashion", subcategory: "mens-clothing", image: "🧥", discount: 20, details: "Waterproof, Insulated", rating: 4.6, sizes: ["S", "M", "L", "XL"], colors: ["#000000", "#2F4F4F", "#8B0000"], type: "trending" },
+            { id: 308, name: "Men's Polo Shirt", price: 39.99, category: "fashion", subcategory: "mens-clothing", image: "👕", discount: 12, details: "Pique Cotton, Logo Embroidery", rating: 4.5, sizes: ["S", "M", "L", "XL"], colors: ["#FFFFFF", "#0000FF", "#008000"], type: "new" },
+            
+            // Women's Clothing
+            { id: 309, name: "Women's Summer Dress", price: 49.99, category: "fashion", subcategory: "womens-clothing", image: "👗", discount: 25, details: "Floral Print, A-Line", rating: 4.7, sizes: ["XS", "S", "M", "L"], colors: ["#FF69B4", "#FFFFFF", "#FFD700"], type: "trending" },
+            { id: 310, name: "Women's Skinny Jeans", price: 54.99, category: "fashion", subcategory: "womens-clothing", image: "👖", discount: 18, details: "Stretch Denim, High Waist", rating: 4.6, sizes: ["26", "28", "30", "32"], colors: ["#000000", "#000080"], type: "new" },
+            { id: 311, name: "Women's Blouse", price: 42.99, category: "fashion", subcategory: "womens-clothing", image: "👚", discount: 15, details: "Silk Blend, Ruffle Details", rating: 4.5, sizes: ["XS", "S", "M", "L"], colors: ["#FFFFFF", "#FF0000", "#0000FF"], type: "trending" },
+            { id: 312, name: "Women's Cardigan", price: 39.99, category: "fashion", subcategory: "womens-clothing", image: "🧥", discount: 20, details: "Knit, Button Front", rating: 4.4, sizes: ["XS", "S", "M", "L"], colors: ["#808080", "#FF69B4", "#000000"], type: "new" },
+            { id: 313, name: "Women's Jumpsuit", price: 69.99, category: "fashion", subcategory: "womens-clothing", image: "👖", discount: 30, details: "Wide Leg, Belted Waist", rating: 4.8, sizes: ["XS", "S", "M", "L"], colors: ["#000000", "#2F4F4F", "#8B0000"], type: "trending" },
+            { id: 314, name: "Women's Skirt", price: 34.99, category: "fashion", subcategory: "womens-clothing", image: "👗", discount: 12, details: "Midi Length, A-Line", rating: 4.3, sizes: ["XS", "S", "M", "L"], colors: ["#000000", "#FFFFFF", "#FF69B4"], type: "new" },
+            { id: 315, name: "Women's Leather Jacket", price: 149.99, category: "fashion", subcategory: "womens-clothing", image: "🧥", discount: 25, details: "Genuine Leather, Zipper", rating: 4.7, sizes: ["XS", "S", "M", "L"], colors: ["#000000", "#8B4513"], type: "trending" },
+            { id: 316, name: "Women's Activewear Set", price: 79.99, category: "fashion", subcategory: "womens-clothing", image: "👚", discount: 15, details: "2-Piece, Moisture Wicking", rating: 4.6, sizes: ["XS", "S", "M", "L"], colors: ["#000000", "#FF69B4", "#0000FF"], type: "new" },
+            
+            // Shoes
+            { id: 317, name: "Men's Running Shoes", price: 89.99, category: "fashion", subcategory: "shoes", image: "👟", discount: 20, details: "Cushioned Sole, Breathable", rating: 4.7, sizes: ["8", "9", "10", "11", "12"], colors: ["#000000", "#FFFFFF", "#0000FF"], type: "trending" },
+            { id: 318, name: "Women's High Heels", price: 69.99, category: "fashion", subcategory: "shoes", image: "👠", discount: 25, details: "3-inch Heel, Patent Leather", rating: 4.5, sizes: ["6", "7", "8", "9"], colors: ["#000000", "#FF0000", "#FFFFFF"], type: "new" },
+            { id: 319, name: "Unisex Sneakers", price: 74.99, category: "fashion", subcategory: "shoes", image: "👟", discount: 15, details: "Canvas, Rubber Sole", rating: 4.6, sizes: ["7", "8", "9", "10", "11"], colors: ["#FFFFFF", "#000000", "#FF0000"], type: "trending" },
+            { id: 320, name: "Men's Dress Shoes", price: 99.99, category: "fashion", subcategory: "shoes", image: "👞", discount: 30, details: "Leather, Oxford Style", rating: 4.8, sizes: ["8", "9", "10", "11"], colors: ["#000000", "#8B4513"], type: "new" },
+            { id: 321, name: "Women's Sandals", price: 44.99, category: "fashion", subcategory: "shoes", image: "👡", discount: 18, details: "Strappy, Comfort Footbed", rating: 4.4, sizes: ["6", "7", "8", "9"], colors: ["#FFFFFF", "#8B4513", "#000000"], type: "trending" },
+            { id: 322, name: "Men's Boots", price: 119.99, category: "fashion", subcategory: "shoes", image: "👢", discount: 22, details: "Leather, Waterproof", rating: 4.7, sizes: ["8", "9", "10", "11", "12"], colors: ["#000000", "#8B4513"], type: "new" },
+            { id: 323, name: "Women's Ballet Flats", price: 39.99, category: "fashion", subcategory: "shoes", image: "🥿", discount: 15, details: "Genuine Leather, Flexible", rating: 4.5, sizes: ["6", "7", "8", "9"], colors: ["#000000", "#FF69B4", "#FFFFFF"], type: "trending" },
+            { id: 324, name: "Kids' School Shoes", price: 34.99, category: "fashion", subcategory: "shoes", image: "👟", discount: 20, details: "Durable, Velcro Strap", rating: 4.6, sizes: ["1", "2", "3", "4"], colors: ["#000000", "#FFFFFF", "#0000FF"], type: "new" },
+            
+            // Accessories
+            { id: 325, name: "Designer Sunglasses", price: 29.99, category: "fashion", subcategory: "accessories", image: "🕶️", discount: 25, details: "UV Protection, Polarized", rating: 4.5, type: "trending" },
+            { id: 326, name: "Leather Belt", price: 24.99, category: "fashion", subcategory: "accessories", image: "🧵", discount: 15, details: "Genuine Leather, Buckle", rating: 4.4, sizes: ["S", "M", "L", "XL"], type: "new" },
+            { id: 327, name: "Winter Scarf", price: 19.99, category: "fashion", subcategory: "accessories", image: "🧣", discount: 30, details: "Wool Blend, Fringed Ends", rating: 4.6, colors: ["#FF0000", "#0000FF", "#FFFFFF"], type: "trending" },
+            { id: 328, name: "Baseball Cap", price: 22.99, category: "fashion", subcategory: "accessories", image: "🧢", discount: 18, details: "Adjustable, Logo Embroidery", rating: 4.3, colors: ["#000000", "#FFFFFF", "#0000FF"], type: "new" },
+            { id: 329, name: "Silk Tie", price: 34.99, category: "fashion", subcategory: "accessories", image: "👔", discount: 20, details: "100% Silk, Classic Pattern", rating: 4.5, colors: ["#0000FF", "#FF0000", "#000000"], type: "trending" },
+            { id: 330, name: "Leather Gloves", price: 29.99, category: "fashion", subcategory: "accessories", image: "🧤", discount: 15, details: "Touchscreen Compatible", rating: 4.4, sizes: ["S", "M", "L"], type: "new" },
+            { id: 331, name: "Designer Wallet", price: 49.99, category: "fashion", subcategory: "accessories", image: "👛", discount: 25, details: "Genuine Leather, RFID Protection", rating: 4.7, colors: ["#000000", "#8B4513"], type: "trending" },
+            { id: 332, name: "Fashion Hat", price: 39.99, category: "fashion", subcategory: "accessories", image: "🎩", discount: 20, details: "Wool Felt, Wide Brim", rating: 4.5, sizes: ["S", "M", "L"], type: "new" },
+            
+            // Bags
+            { id: 333, name: "Leather Handbag", price: 129.99, category: "fashion", subcategory: "bags", image: "👜", discount: 30, details: "Genuine Leather, Crossbody", rating: 4.8, colors: ["#000000", "#8B4513", "#FF0000"], type: "trending" },
+            { id: 334, name: "Laptop Backpack", price: 59.99, category: "fashion", subcategory: "bags", image: "🎒", discount: 25, details: "Waterproof, Padded Compartment", rating: 4.6, colors: ["#000000", "#2F4F4F", "#0000FF"], type: "new" },
+            { id: 335, name: "Designer Tote Bag", price: 89.99, category: "fashion", subcategory: "bags", image: "👜", discount: 20, details: "Canvas, Leather Trim", rating: 4.7, colors: ["#FFFFFF", "#000000", "#FF69B4"], type: "trending" },
+            { id: 336, name: "Travel Duffel Bag", price: 79.99, category: "fashion", subcategory: "bags", image: "🎒", discount: 15, details: "Water Resistant, Multiple Pockets", rating: 4.5, colors: ["#000000", "#2F4F4F"], type: "new" },
+            { id: 337, name: "Evening Clutch", price: 44.99, category: "fashion", subcategory: "bags", image: "👛", discount: 30, details: "Sequined, Chain Strap", rating: 4.4, colors: ["#000000", "#FFFFFF", "#FFD700"], type: "trending" },
+            { id: 338, name: "Messenger Bag", price: 69.99, category: "fashion", subcategory: "bags", image: "💼", discount: 22, details: "Vegan Leather, Adjustable Strap", rating: 4.6, colors: ["#000000", "#8B4513"], type: "new" },
+            { id: 339, name: "Beach Tote", price: 34.99, category: "fashion", subcategory: "bags", image: "👜", discount: 18, details: "Straw, Cotton Lining", rating: 4.3, colors: ["#FFFFFF", "#FFD700"], type: "trending" },
+            { id: 340, name: "Mini Backpack", price: 49.99, category: "fashion", subcategory: "bags", image: "🎒", discount: 25, details: "Nylon, Anti-Theft Pocket", rating: 4.5, colors: ["#000000", "#FF69B4", "#0000FF"], type: "new" },
+            
+            // Jewelry
+            { id: 341, name: "Silver Necklace", price: 39.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 20, details: "925 Sterling Silver, 18-inch", rating: 4.7, type: "trending" },
+            { id: 342, name: "Gold Earrings", price: 59.99, category: "fashion", subcategory: "jewelry", image: "💍", discount: 25, details: "14K Gold, Stud Style", rating: 4.6, type: "new" },
+            { id: 343, name: "Diamond Bracelet", price: 199.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 30, details: "Sterling Silver with Diamonds", rating: 4.8, type: "trending" },
+            { id: 344, name: "Pearl Necklace", price: 89.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 15, details: "Freshwater Pearls, 16-inch", rating: 4.5, type: "new" },
+            { id: 345, name: "Charm Bracelet", price: 34.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 20, details: "Sterling Silver, Customizable", rating: 4.4, type: "trending" },
+            { id: 346, name: "Statement Ring", price: 24.99, category: "fashion", subcategory: "jewelry", image: "💍", discount: 18, details: "Gold Plated, Adjustable", rating: 4.3, sizes: ["S", "M", "L"], type: "new" },
+            { id: 347, name: "Ankle Bracelet", price: 19.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 25, details: "Sterling Silver, Chain Link", rating: 4.5, type: "trending" },
+            { id: 348, name: "Birthstone Pendant", price: 44.99, category: "fashion", subcategory: "jewelry", image: "📿", discount: 20, details: "Sterling Silver, All Birthstones", rating: 4.6, type: "new" },
+            
+            // Watches
+            { id: 349, name: "Smart Watch", price: 199.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 25, details: "Fitness Tracking, Heart Rate", rating: 4.7, colors: ["#000000", "#FFFFFF", "#FF0000"], type: "trending" },
+            { id: 350, name: "Luxury Watch", price: 299.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 30, details: "Stainless Steel, Sapphire Crystal", rating: 4.8, colors: ["#000000", "#FFFFFF"], type: "new" },
+            { id: 351, name: "Sports Watch", price: 149.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 20, details: "Water Resistant, Chronograph", rating: 4.6, colors: ["#000000", "#0000FF", "#FF0000"], type: "trending" },
+            { id: 352, name: "Classic Watch", price: 129.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 15, details: "Leather Strap, Analog", rating: 4.5, colors: ["#8B4513", "#000000"], type: "new" },
+            { id: 353, name: "Digital Watch", price: 79.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 25, details: "LED Display, Multiple Functions", rating: 4.4, colors: ["#000000", "#FFFFFF"], type: "trending" },
+            { id: 354, name: "Diving Watch", price: 179.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 22, details: "200m Water Resistant, Luminous", rating: 4.7, colors: ["#000000", "#0000FF"], type: "new" },
+            { id: 355, name: "Fashion Watch", price: 89.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 18, details: "Rose Gold, Mesh Band", rating: 4.5, colors: ["#FF69B4", "#FFFFFF"], type: "trending" },
+            { id: 356, name: "Kids' Watch", price: 34.99, category: "fashion", subcategory: "watches", image: "⌚", discount: 30, details: "Colorful, Educational", rating: 4.3, colors: ["#FF0000", "#0000FF", "#FF69B4"], type: "new" },
+            
+            // Kids Fashion
+            { id: 357, name: "Kids' T-Shirt Set", price: 24.99, category: "fashion", subcategory: "kids", image: "👕", discount: 25, details: "3-Pack, 100% Cotton", rating: 4.6, sizes: ["2T", "3T", "4T", "5T"], colors: ["#0000FF", "#FF0000", "#008000"], type: "trending" },
+            { id: 358, name: "Kids' Jeans", price: 29.99, category: "fashion", subcategory: "kids", image: "👖", discount: 20, details: "Stretch Denim, Adjustable Waist", rating: 4.5, sizes: ["2T", "3T", "4T", "5T"], colors: ["#000000", "#000080"], type: "new" },
+            { id: 359, name: "Kids' Dress", price: 34.99, category: "fashion", subcategory: "kids", image: "👗", discount: 30, details: "Floral Print, Party Dress", rating: 4.7, sizes: ["2T", "3T", "4T", "5T"], colors: ["#FF69B4", "#FFFFFF", "#FFD700"], type: "trending" },
+            { id: 360, name: "Kids' Hoodie", price: 27.99, category: "fashion", subcategory: "kids", image: "🧥", discount: 15, details: "Fleece Lined, Character Print", rating: 4.4, sizes: ["2T", "3T", "4T", "5T"], colors: ["#0000FF", "#FF0000", "#008000"], type: "new" },
+            { id: 361, name: "Kids' Pajama Set", price: 22.99, category: "fashion", subcategory: "kids", image: "👕", discount: 25, details: "2-Piece, Soft Cotton", rating: 4.6, sizes: ["2T", "3T", "4T", "5T"], colors: ["#0000FF", "#FF69B4", "#008000"], type: "trending" },
+            { id: 362, name: "Kids' Winter Coat", price: 49.99, category: "fashion", subcategory: "kids", image: "🧥", discount: 20, details: "Waterproof, Insulated", rating: 4.5, sizes: ["2T", "3T", "4T", "5T"], colors: ["#FF0000", "#0000FF", "#008000"], type: "new" },
+            { id: 363, name: "Kids' Sneakers", price: 32.99, category: "fashion", subcategory: "kids", image: "👟", discount: 18, details: "Light-Up Soles, Velcro", rating: 4.7, sizes: ["8C", "9C", "10C", "11C"], colors: ["#FF0000", "#0000FF", "#FFFFFF"], type: "trending" },
+            { id: 364, name: "Kids' Backpack", price: 24.99, category: "fashion", subcategory: "kids", image: "🎒", discount: 30, details: "Character Design, Lunch Bag", rating: 4.4, colors: ["#FF0000", "#0000FF", "#FF69B4"], type: "new" }
+        ];
+
+        // App state
+        let currentPage = 1;
+        const productsPerPage = 12;
+        let filteredProducts = [...fashionProducts];
+        let currentSubcategory = 'all';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            loadAllFashion();
+            setupEventListeners();
+            loadFooter();
+            updateCartCount();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('../footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('fashion-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // Subcategory filters
+            document.querySelectorAll('.subcategory').forEach(category => {
+                category.addEventListener('click', handleSubcategoryFilter);
+            });
+        }
+
+        // Load featured products
+        function loadFeaturedProducts() {
+            // New arrivals
+            const newArrivals = fashionProducts
+                .filter(product => product.type === 'new')
+                .slice(0, 4);
+            
+            newArrivals.forEach(product => {
+                document.getElementById('new-arrivals').appendChild(createProductCard(product));
+            });
+
+            // Trending now
+            const trendingNow = fashionProducts
+                .filter(product => product.type === 'trending')
+                .slice(0, 4);
+            
+            trendingNow.forEach(product => {
+                document.getElementById('trending-now').appendChild(createProductCard(product));
+            });
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('fashion-search-input').value.toLowerCase();
+            currentPage = 1;
+            
+            if (searchTerm) {
+                filteredProducts = fashionProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.details.toLowerCase().includes(searchTerm)
+                );
+            } else {
+                filteredProducts = [...fashionProducts];
+            }
+            
+            // Apply current subcategory filter
+            if (currentSubcategory !== 'all') {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.subcategory === currentSubcategory
+                );
+            }
+            
+            loadFilteredProducts();
+        }
+
+        // Handle subcategory filter
+        function handleSubcategoryFilter(e) {
+            const subcategory = e.currentTarget.getAttribute('data-subcategory');
+            currentSubcategory = subcategory;
+            currentPage = 1;
+            
+            // Update active subcategory
+            document.querySelectorAll('.subcategory').forEach(cat => {
+                cat.classList.remove('active');
+            });
+            e.currentTarget.classList.add('active');
+            
+            // Filter products
+            if (subcategory === 'all') {
+                filteredProducts = [...fashionProducts];
+            } else {
+                filteredProducts = fashionProducts.filter(product => 
+                    product.subcategory === subcategory
+                );
+            }
+            
+            // Apply search filter if any
+            const searchTerm = document.getElementById('fashion-search-input').value.toLowerCase();
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.details.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            loadFilteredProducts();
+        }
+
+        // Load all fashion
+        function loadAllFashion() {
+            filteredProducts = [...fashionProducts];
+            loadFilteredProducts();
+        }
+
+        // Load filtered products with pagination
+        function loadFilteredProducts() {
+            const container = document.getElementById('fashion-products');
+            const paginationContainer = document.getElementById('fashion-pagination');
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            // Add products to container
+            paginatedProducts.forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
+            
+            // Create pagination buttons
+            createPaginationButtons(totalPages, paginationContainer);
+        }
+
+        // Create product card
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const discountPrice = product.discount > 0 ? 
+                (product.price * (1 - product.discount / 100)).toFixed(2) : null;
+            
+            // Generate star rating
+            const stars = '★'.repeat(Math.floor(product.rating)) + '☆'.repeat(5 - Math.floor(product.rating));
+            
+            let sizeOptionsHTML = '';
+            if (product.sizes) {
+                sizeOptionsHTML = `
+                    <div class="size-options">
+                        ${product.sizes.map(size => `<span class="size-option">${size}</span>`).join('')}
+                    </div>
+                `;
+            }
+            
+            let colorOptionsHTML = '';
+            if (product.colors) {
+                colorOptionsHTML = `
+                    <div class="color-options">
+                        ${product.colors.map(color => `<div class="color-option" style="background-color: ${color};"></div>`).join('')}
+                    </div>
+                `;
+            }
+            
+            card.innerHTML = `
+                ${product.discount > 0 ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
+                <div class="product-image">${product.image}</div>
+                <h3>${product.name}</h3>
+                <div class="product-details">${product.details}</div>
+                ${sizeOptionsHTML}
+                ${colorOptionsHTML}
+                <div class="rating">${stars} ${product.rating}</div>
+                <div class="product-price">
+                    ${discountPrice ? 
+                        `<span class="original-price">$${product.price.toFixed(2)}</span>
+                         <span class="discount-price">$${discountPrice}</span>` :
+                        `$${product.price.toFixed(2)}`
+                    }
+                </div>
+                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+            `;
+            
+            // Add size selection
+            if (product.sizes) {
+                const sizeOptions = card.querySelectorAll('.size-option');
+                sizeOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        sizeOptions.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                    });
+                });
+                // Select first size by default
+                if (sizeOptions.length > 0) {
+                    sizeOptions[0].classList.add('selected');
+                }
+            }
+            
+            // Add color selection
+            if (product.colors) {
+                const colorOptions = card.querySelectorAll('.color-option');
+                colorOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        colorOptions.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                    });
+                });
+                // Select first color by default
+                if (colorOptions.length > 0) {
+                    colorOptions[0].classList.add('selected');
+                }
+            }
+            
+            const addToCartBtn = card.querySelector('.add-to-cart');
+            addToCartBtn.addEventListener('click', () => addToCart(product, discountPrice));
+            
+            return card;
+        }
+
+        // Create pagination buttons
+        function createPaginationButtons(totalPages, paginationContainer) {
+            paginationContainer.innerHTML = '';
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'page-btn';
+            prevButton.innerHTML = '&laquo;';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadFilteredProducts();
+                }
+            });
+            paginationContainer.appendChild(prevButton);
+            
+            // Page buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    loadFilteredProducts();
+                });
+                paginationContainer.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'page-btn';
+            nextButton.innerHTML = '&raquo;';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadFilteredProducts();
+                }
+            });
+            paginationContainer.appendChild(nextButton);
+        }
+
+        // Add to cart function
+        function addToCart(product, discountPrice) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: discountPrice ? parseFloat(discountPrice) : product.price,
+                    originalPrice: product.price,
+                    discount: product.discount,
+                    quantity: 1,
+                    image: product.image,
+                    details: product.details
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show confirmation
+            if (product.discount > 0) {
+                alert(`${product.name} added to cart! You saved $${(product.price - discountPrice).toFixed(2)}!`);
+            } else {
+                alert(`${product.name} added to cart!`);
+            }
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+            }
+        }
+    </script>
+</body>
+</html>

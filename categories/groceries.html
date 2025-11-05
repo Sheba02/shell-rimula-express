@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groceries - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .subcategories {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .subcategory {
+            background-color: var(--section-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .subcategory.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .subcategory:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        
+        .deal-badge {
+            background-color: #f44336;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .product-card {
+            position: relative;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--medium-gray);
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .discount-price {
+            color: #f44336;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="../index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <a href="../login.html" id="nav-login">
+                    <i class="fas fa-user"></i>
+                    <span id="login-text">Login</span>
+                </a>
+                <a href="../cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../all-products.html">All Products</a></li>
+                <li><a href="../deals.html">Today's Deals</a></li>
+                <li><a href="groceries.html" class="active">Groceries</a></li>
+                <li><a href="electronics.html">Electronics</a></li>
+                <li><a href="fashion.html">Fashion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>></span>
+                <span>Groceries</span>
+            </div>
+            
+            <div class="category-hero">
+                <h1>Groceries</h1>
+                <p>Fresh produce, dairy, meat, pantry essentials, and everything you need for your kitchen</p>
+            </div>
+            
+            <div class="subcategories">
+                <div class="subcategory active" data-subcategory="all">All Groceries</div>
+                <div class="subcategory" data-subcategory="fresh-produce">Fresh Produce</div>
+                <div class="subcategory" data-subcategory="dairy-eggs">Dairy & Eggs</div>
+                <div class="subcategory" data-subcategory="meat-poultry">Meat & Poultry</div>
+                <div class="subcategory" data-subcategory="bakery">Bakery</div>
+                <div class="subcategory" data-subcategory="pantry">Pantry</div>
+                <div class="subcategory" data-subcategory="frozen">Frozen Foods</div>
+                <div class="subcategory" data-subcategory="beverages">Beverages</div>
+                <div class="subcategory" data-subcategory="snacks">Snacks</div>
+            </div>
+            
+            <div class="products-header">
+                <h2 class="category-title">Groceries</h2>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="groceries-search-input" placeholder="Search groceries...">
+                </div>
+            </div>
+            
+            <div class="product-grid" id="groceries-products">
+                <!-- Groceries products will be loaded here -->
+            </div>
+            
+            <div class="pagination" id="groceries-pagination">
+                <!-- Pagination buttons will be added here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Extensive groceries product data
+        const groceriesProducts = [
+            // Fresh Produce
+            { id: 101, name: "Fresh Apples (1kg)", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "🍎", discount: 0 },
+            { id: 102, name: "Bananas (1kg)", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "🍌", discount: 5 },
+            { id: 103, name: "Oranges (1kg)", price: 3.49, category: "groceries", subcategory: "fresh-produce", image: "🍊", discount: 0 },
+            { id: 104, name: "Strawberries (500g)", price: 4.99, category: "groceries", subcategory: "fresh-produce", image: "🍓", discount: 10 },
+            { id: 105, name: "Grapes (1kg)", price: 5.99, category: "groceries", subcategory: "fresh-produce", image: "🍇", discount: 0 },
+            { id: 106, name: "Watermelon", price: 6.99, category: "groceries", subcategory: "fresh-produce", image: "🍉", discount: 15 },
+            { id: 107, name: "Pineapple", price: 3.99, category: "groceries", subcategory: "fresh-produce", image: "🍍", discount: 0 },
+            { id: 108, name: "Mangoes (1kg)", price: 7.99, category: "groceries", subcategory: "fresh-produce", image: "🥭", discount: 8 },
+            
+            { id: 109, name: "Potatoes (2kg)", price: 3.50, category: "groceries", subcategory: "fresh-produce", image: "🥔", discount: 0 },
+            { id: 110, name: "Carrots (1kg)", price: 2.25, category: "groceries", subcategory: "fresh-produce", image: "🥕", discount: 0 },
+            { id: 111, name: "Tomatoes (1kg)", price: 3.75, category: "groceries", subcategory: "fresh-produce", image: "🍅", discount: 12 },
+            { id: 112, name: "Onions (1kg)", price: 2.50, category: "groceries", subcategory: "fresh-produce", image: "🧅", discount: 0 },
+            { id: 113, name: "Bell Peppers (3 pack)", price: 4.25, category: "groceries", subcategory: "fresh-produce", image: "🫑", discount: 0 },
+            { id: 114, name: "Broccoli", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "🥦", discount: 5 },
+            { id: 115, name: "Lettuce", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "🥬", discount: 0 },
+            { id: 116, name: "Cucumbers (2 pack)", price: 2.75, category: "groceries", subcategory: "fresh-produce", image: "🥒", discount: 0 },
+            
+            // Dairy & Eggs
+            { id: 117, name: "Fresh Milk (1L)", price: 3.50, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
+            { id: 118, name: "Organic Eggs (12)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "🥚", discount: 0 },
+            { id: 119, name: "Butter (250g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "🧈", discount: 10 },
+            { id: 120, name: "Cheddar Cheese (200g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
+            { id: 121, name: "Yogurt (6 pack)", price: 5.25, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 15 },
+            { id: 122, name: "Cream Cheese (200g)", price: 3.99, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
+            { id: 123, name: "Sour Cream (300g)", price: 2.75, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
+            { id: 124, name: "Mozzarella Cheese (250g)", price: 5.50, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 8 },
+            
+            { id: 125, name: "Heavy Cream (500ml)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
+            { id: 126, name: "Greek Yogurt (500g)", price: 4.99, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 12 },
+            { id: 127, name: "Parmesan Cheese (100g)", price: 3.75, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
+            { id: 128, name: "Cottage Cheese (500g)", price: 3.25, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 5 },
+            
+            // Meat & Poultry
+            { id: 129, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", subcategory: "meat-poultry", image: "🍗", discount: 0 },
+            { id: 130, name: "Ground Beef (500g)", price: 7.99, category: "groceries", subcategory: "meat-poultry", image: "🥩", discount: 10 },
+            { id: 131, name: "Pork Chops (4 pieces)", price: 9.75, category: "groceries", subcategory: "meat-poultry", image: "🥓", discount: 0 },
+            { id: 132, name: "Salmon Fillet (300g)", price: 12.99, category: "groceries", subcategory: "meat-poultry", image: "🐟", discount: 15 },
+            { id: 133, name: "Bacon (500g)", price: 6.99, category: "groceries", subcategory: "meat-poultry", image: "🥓", discount: 0 },
+            { id: 134, name: "Turkey Breast (500g)", price: 10.25, category: "groceries", subcategory: "meat-poultry", image: "🦃", discount: 8 },
+            { id: 135, name: "Sausages (6 pack)", price: 5.50, category: "groceries", subcategory: "meat-poultry", image: "🌭", discount: 0 },
+            { id: 136, name: "Whole Chicken", price: 11.99, category: "groceries", subcategory: "meat-poultry", image: "🍗", discount: 12 },
+            
+            // Bakery
+            { id: 137, name: "Whole Wheat Bread", price: 2.75, category: "groceries", subcategory: "bakery", image: "🍞", discount: 0 },
+            { id: 138, name: "White Bread", price: 2.25, category: "groceries", subcategory: "bakery", image: "🍞", discount: 0 },
+            { id: 139, name: "Bagels (6 pack)", price: 3.99, category: "groceries", subcategory: "bakery", image: "🥯", discount: 10 },
+            { id: 140, name: "Croissants (4 pack)", price: 4.50, category: "groceries", subcategory: "bakery", image: "🥐", discount: 0 },
+            { id: 141, name: "Muffins (6 pack)", price: 5.25, category: "groceries", subcategory: "bakery", image: "🧁", discount: 15 },
+            { id: 142, name: "Donuts (6 pack)", price: 4.75, category: "groceries", subcategory: "bakery", image: "🍩", discount: 0 },
+            { id: 143, name: "French Baguette", price: 2.99, category: "groceries", subcategory: "bakery", image: "🥖", discount: 0 },
+            { id: 144, name: "Cinnamon Rolls (4 pack)", price: 6.25, category: "groceries", subcategory: "bakery", image: "🍥", discount: 8 },
+            
+            // Pantry
+            { id: 145, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", subcategory: "pantry", image: "🍚", discount: 0 },
+            { id: 146, name: "Pasta (500g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "🍝", discount: 0 },
+            { id: 147, name: "Tomato Sauce", price: 2.25, category: "groceries", subcategory: "pantry", image: "🍅", discount: 0 },
+            { id: 148, name: "Olive Oil (500ml)", price: 7.99, category: "groceries", subcategory: "pantry", image: "🫒", discount: 10 },
+            { id: 149, name: "Flour (1kg)", price: 2.50, category: "groceries", subcategory: "pantry", image: "🌾", discount: 0 },
+            { id: 150, name: "Sugar (1kg)", price: 2.25, category: "groceries", subcategory: "pantry", image: "🍚", discount: 0 },
+            { id: 151, name: "Salt (1kg)", price: 1.50, category: "groceries", subcategory: "pantry", image: "🧂", discount: 0 },
+            { id: 152, name: "Black Pepper (100g)", price: 3.25, category: "groceries", subcategory: "pantry", image: "🌶️", discount: 5 },
+            
+            { id: 153, name: "Canned Beans (400g)", price: 1.99, category: "groceries", subcategory: "pantry", image: "🥫", discount: 0 },
+            { id: 154, name: "Canned Corn (400g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "🥫", discount: 0 },
+            { id: 155, name: "Canned Tuna (200g)", price: 2.50, category: "groceries", subcategory: "pantry", image: "🥫", discount: 12 },
+            { id: 156, name: "Peanut Butter (500g)", price: 4.25, category: "groceries", subcategory: "pantry", image: "🥜", discount: 0 },
+            { id: 157, name: "Jam (400g)", price: 3.50, category: "groceries", subcategory: "pantry", image: "🍓", discount: 8 },
+            { id: 158, name: "Honey (500g)", price: 6.99, category: "groceries", subcategory: "pantry", image: "🍯", discount: 0 },
+            { id: 159, name: "Cereal (500g)", price: 4.75, category: "groceries", subcategory: "pantry", image: "🥣", discount: 15 },
+            { id: 160, name: "Oats (1kg)", price: 3.25, category: "groceries", subcategory: "pantry", image: "🌾", discount: 0 },
+            
+            // Frozen Foods
+            { id: 161, name: "Frozen Vegetables (1kg)", price: 3.25, category: "groceries", subcategory: "frozen", image: "🥦", discount: 0 },
+            { id: 162, name: "Frozen Berries (500g)", price: 5.99, category: "groceries", subcategory: "frozen", image: "🫐", discount: 10 },
+            { id: 163, name: "Frozen Pizza", price: 6.50, category: "groceries", subcategory: "frozen", image: "🍕", discount: 0 },
+            { id: 164, name: "Ice Cream (1L)", price: 4.99, category: "groceries", subcategory: "frozen", image: "🍦", discount: 20 },
+            { id: 165, name: "Frozen French Fries (1kg)", price: 3.75, category: "groceries", subcategory: "frozen", image: "🍟", discount: 0 },
+            { id: 166, name: "Frozen Chicken Nuggets (500g)", price: 5.25, category: "groceries", subcategory: "frozen", image: "🍗", discount: 12 },
+            { id: 167, name: "Frozen Fish Fillets (500g)", price: 8.99, category: "groceries", subcategory: "frozen", image: "🐟", discount: 0 },
+            { id: 168, name: "Frozen Dumplings (500g)", price: 6.75, category: "groceries", subcategory: "frozen", image: "🥟", discount: 8 },
+            
+            // Beverages
+            { id: 169, name: "Orange Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "🧃", discount: 0 },
+            { id: 170, name: "Apple Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "🧃", discount: 5 },
+            { id: 171, name: "Coffee (250g)", price: 6.75, category: "groceries", subcategory: "beverages", image: "☕", discount: 0 },
+            { id: 172, name: "Tea Bags (20 pack)", price: 3.50, category: "groceries", subcategory: "beverages", image: "🍵", discount: 10 },
+            { id: 173, name: "Soda (2L)", price: 2.50, category: "groceries", subcategory: "beverages", image: "🥤", discount: 0 },
+            { id: 174, name: "Mineral Water (6x1L)", price: 3.99, category: "groceries", subcategory: "beverages", image: "💧", discount: 0 },
+            { id: 175, name: "Energy Drink", price: 2.00, category: "groceries", subcategory: "beverages", image: "⚡", discount: 15 },
+            { id: 176, name: "Sports Drink", price: 2.75, category: "groceries", subcategory: "beverages", image: "🧃", discount: 0 },
+            
+            // Snacks
+            { id: 177, name: "Potato Chips", price: 2.50, category: "groceries", subcategory: "snacks", image: "🥔", discount: 0 },
+            { id: 178, name: "Chocolate Bar", price: 1.75, category: "groceries", subcategory: "snacks", image: "🍫", discount: 10 },
+            { id: 179, name: "Cookies (300g)", price: 3.25, category: "groceries", subcategory: "snacks", image: "🍪", discount: 0 },
+            { id: 180, name: "Popcorn", price: 2.00, category: "groceries", subcategory: "snacks", image: "🍿", discount: 0 },
+            { id: 181, name: "Nuts Mix (200g)", price: 5.50, category: "groceries", subcategory: "snacks", image: "🥜", discount: 12 },
+            { id: 182, name: "Granola Bars (6 pack)", price: 4.25, category: "groceries", subcategory: "snacks", image: "🍫", discount: 0 },
+            { id: 183, name: "Pretzels", price: 2.75, category: "groceries", subcategory: "snacks", image: "🥨", discount: 8 },
+            { id: 184, name: "Crackers", price: 2.25, category: "groceries", subcategory: "snacks", image: "🍘", discount: 0 }
+        ];
+
+        // App state
+        let currentPage = 1;
+        const productsPerPage = 12;
+        let filteredProducts = [...groceriesProducts];
+        let currentSubcategory = 'all';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllGroceries();
+            setupEventListeners();
+            loadFooter();
+            updateCartCount();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('../footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('groceries-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+
+            // Subcategory filters
+            document.querySelectorAll('.subcategory').forEach(category => {
+                category.addEventListener('click', handleSubcategoryFilter);
+            });
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('groceries-search-input').value.toLowerCase();
+            currentPage = 1;
+            
+            if (searchTerm) {
+                filteredProducts = groceriesProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            } else {
+                filteredProducts = [...groceriesProducts];
+            }
+            
+            // Apply current subcategory filter
+            if (currentSubcategory !== 'all') {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.subcategory === currentSubcategory
+                );
+            }
+            
+            loadFilteredProducts();
+        }
+
+        // Handle subcategory filter
+        function handleSubcategoryFilter(e) {
+            const subcategory = e.currentTarget.getAttribute('data-subcategory');
+            currentSubcategory = subcategory;
+            currentPage = 1;
+            
+            // Update active subcategory
+            document.querySelectorAll('.subcategory').forEach(cat => {
+                cat.classList.remove('active');
+            });
+            e.currentTarget.classList.add('active');
+            
+            // Filter products
+            if (subcategory === 'all') {
+                filteredProducts = [...groceriesProducts];
+            } else {
+                filteredProducts = groceriesProducts.filter(product => 
+                    product.subcategory === subcategory
+                );
+            }
+            
+            // Apply search filter if any
+            const searchTerm = document.getElementById('groceries-search-input').value.toLowerCase();
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            loadFilteredProducts();
+        }
+
+        // Load all groceries
+        function loadAllGroceries() {
+            filteredProducts = [...groceriesProducts];
+            loadFilteredProducts();
+        }
+
+        // Load filtered products with pagination
+        function loadFilteredProducts() {
+            const container = document.getElementById('groceries-products');
+            const paginationContainer = document.getElementById('groceries-pagination');
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            // Add products to container
+            paginatedProducts.forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
+            
+            // Create pagination buttons
+            createPaginationButtons(totalPages, paginationContainer);
+        }
+
+        // Create product card
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const discountPrice = product.discount > 0 ? 
+                (product.price * (1 - product.discount / 100)).toFixed(2) : null;
+            
+            card.innerHTML = `
+                ${product.discount > 0 ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
+                <div class="product-image">${product.image}</div>
+                <h3>${product.name}</h3>
+                <div class="product-price">
+                    ${discountPrice ? 
+                        `<span class="original-price">$${product.price.toFixed(2)}</span>
+                         <span class="discount-price">$${discountPrice}</span>` :
+                        `$${product.price.toFixed(2)}`
+                    }
+                </div>
+                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+            `;
+            
+            const addToCartBtn = card.querySelector('.add-to-cart');
+            addToCartBtn.addEventListener('click', () => addToCart(product, discountPrice));
+            
+            return card;
+        }
+
+        // Create pagination buttons
+        function createPaginationButtons(totalPages, paginationContainer) {
+            paginationContainer.innerHTML = '';
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'page-btn';
+            prevButton.innerHTML = '&laquo;';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadFilteredProducts();
+                }
+            });
+            paginationContainer.appendChild(prevButton);
+            
+            // Page buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    loadFilteredProducts();
+                });
+                paginationContainer.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'page-btn';
+            nextButton.innerHTML = '&raquo;';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadFilteredProducts();
+                }
+            });
+            paginationContainer.appendChild(nextButton);
+        }
+
+        // Add to cart function
+        function addToCart(product, discountPrice) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: discountPrice ? parseFloat(discountPrice) : product.price,
+                    originalPrice: product.price,
+                    discount: product.discount,
+                    quantity: 1,
+                    image: product.image
+                });
+            }
+            
+            // Save cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show confirmation
+            if (product.discount > 0) {
+                alert(`${product.name} added to cart! You saved $${(product.price - discountPrice).toFixed(2)}!`);
+            } else {
+                alert(`${product.name} added to cart!`);
+            }
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+            }
+        }
+    </script>
+</body>
+</html>
