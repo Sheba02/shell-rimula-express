@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .faq-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .faq-header h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .faq-header p {
+            font-size: 1.1rem;
+            color: var(--dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-faq {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+        
+        .search-faq input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .search-faq input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .search-faq i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+        }
+        
+        .faq-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+        
+        .faq-category {
+            background: var(--section-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border: 2px solid transparent;
+        }
+        
+        .faq-category.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+        
+        .faq-category:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        
+        .faq-section {
+            margin-bottom: 3rem;
+        }
+        
+        .faq-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .faq-item {
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--dark);
+            transition: background-color 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: var(--section-bg);
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: var(--section-bg);
+        }
+        
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .contact-promo {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .contact-promo h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-promo p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .promo-btn {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .promo-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--medium-gray);
+            display: none;
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--light-gray);
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .faq-categories {
+                flex-wrap: wrap;
+            }
+            
+            .faq-header h1 {
+                font-size: 2rem;
+            }
+            
+            .faq-question {
+                padding: 1rem;
+            }
+            
+            .contact-promo {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <div id="auth-buttons">
+                    <a href="login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+                <a href="cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="all-products.html">All Products</a></li>
+                <li><a href="deals.html">Today's Deals</a></li>
+                <li><a href="categories/groceries.html">Groceries</a></li>
+                <li><a href="categories/electronics.html">Electronics</a></li>
+                <li><a href="categories/fashion.html">Fashion</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>></span>
+                <span>FAQ</span>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-header">
+                    <h1>Frequently Asked Questions</h1>
+                    <p>Find quick answers to common questions about shopping at Shell Rimula Express Supermarket</p>
+                </div>
+                
+                <div class="search-faq">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="faq-search" placeholder="Search for answers...">
+                </div>
+                
+                <div class="faq-categories">
+                    <div class="faq-category active" data-category="all">All Questions</div>
+                    <div class="faq-category" data-category="ordering">Ordering & Payment</div>
+                    <div class="faq-category" data-category="delivery">Delivery</div>
+                    <div class="faq-category" data-category="returns">Returns & Refunds</div>
+                    <div class="faq-category" data-category="products">Products & Quality</div>
+                    <div class="faq-category" data-category="account">Account & Security</div>
+                </div>
+                
+                <div class="no-results" id="no-results">
+                    <i class="fas fa-search"></i>
+                    <h3>No results found</h3>
+                    <p>Try searching with different keywords or browse the categories above</p>
+                </div>
+                
+                <div class="faq-content">
+                    <!-- Ordering & Payment -->
+                    <div class="faq-section" data-category="ordering">
+                        <h2><i class="fas fa-shopping-cart"></i> Ordering & Payment</h2>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I place an order?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>To place an order:</p>
+                                <ol>
+                                    <li>Browse our products and add items to your cart</li>
+                                    <li>Click on the cart icon and review your items</li>
+                                    <li>Proceed to checkout</li>
+                                    <li>Enter your delivery details and payment information</li>
+                                    <li>Confirm your order</li>
+                                </ol>
+                                <p>You'll receive an order confirmation email with all the details.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What payment methods do you accept?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>We accept the following payment methods:</p>
+                                <ul>
+                                    <li>Mobile Money (MTN, Airtel)</li>
+                                    <li>Credit/Debit Cards (Visa, MasterCard)</li>
+                                    <li>Cash on Delivery (within Kampala)</li>
+                                    <li>Bank Transfer</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Can I modify or cancel my order?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>You can modify or cancel your order within 30 minutes of placing it by contacting our customer service at <strong>+256 700 123 456</strong>. After this time, your order may already be processed for delivery.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Is there a minimum order amount?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>For delivery orders, we have a minimum order amount of UGX 15,000. For in-store pickup, there is no minimum order amount.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Delivery -->
+                    <div class="faq-section" data-category="delivery">
+                        <h2><i class="fas fa-shipping-fast"></i> Delivery</h2>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What are your delivery areas and charges?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p><strong>Delivery Charges:</strong></p>
+                                <ul>
+                                    <li>Free delivery for orders over UGX 50,000 within Kampala</li>
+                                    <li>UGX 5,000 for orders below UGX 50,000 within Kampala</li>
+                                    <li>UGX 10,000 for delivery to surrounding areas</li>
+                                    <li>Contact us for delivery charges outside greater Kampala</li>
+                                </ul>
+                                <p><strong>Delivery Times:</strong> Same-day delivery for orders placed before 2:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How long does delivery take?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Delivery times vary by location:</p>
+                                <ul>
+                                    <li><strong>Same-day delivery:</strong> For orders placed before 2:00 PM within Kampala</li>
+                                    <li><strong>Next-day delivery:</strong> For orders placed after 2:00 PM or for areas outside central Kampala</li>
+                                    <li><strong>Express delivery:</strong> Available for urgent orders (additional charges apply)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Can I track my delivery?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Yes! Once your order is dispatched, you'll receive an SMS with a tracking link. You can also track your order through your account on our website or by calling our customer service.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What if I'm not available during delivery?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>If you're not available, our delivery team will:</p>
+                                <ul>
+                                    <li>Attempt to call you to arrange an alternative time</li>
+                                    <li>Leave the package with a neighbor (with your permission)</li>
+                                    <li>Return to our store for you to pick up later</li>
+                                </ul>
+                                <p>Additional delivery attempts may incur extra charges.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Returns & Refunds -->
+                    <div class="faq-section" data-category="returns">
+                        <h2><i class="fas fa-exchange-alt"></i> Returns & Refunds</h2>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>What is your return policy?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>We accept returns within 7 days of purchase for most items, provided:</p>
+                                <ul>
+                                    <li>The product is in its original packaging</li>
+                                    <li>The product is unused and in resalable condition</li>
+                                    <li>You have the original receipt or order confirmation</li>
+                                </ul>
+                                <p><strong>Note:</strong> Perishable goods and personal care items cannot be returned for hygiene reasons.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I return an item?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>To return an item:</p>
+                                <ol>
+                                    <li>Contact our customer service to initiate the return process</li>
+                                    <li>Package the item securely in its original packaging</li>
+                                    <li>Bring it to our store or schedule a pickup (free for defective items)</li>
+                                    <li>Once inspected, we'll process your refund or exchange</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How long do refunds take?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Refund processing times:</p>
+                                <ul>
+                                    <li><strong>Mobile Money/Card refunds:</strong> 3-5 business days</li>
+                                    <li><strong>Cash refunds:</strong> Instant when returning to our store</li>
+                                    <li><strong>Bank transfers:</strong> 5-7 business days</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products & Quality -->
+                    <div class="faq-section" data-category="products">
+                        <h2><i class="fas fa-tags"></i> Products & Quality</h2>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do you ensure product quality and freshness?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>We take quality seriously:</p>
+                                <ul>
+                                    <li>Daily deliveries of fresh produce from trusted local farmers</li>
+                                    <li>Regular quality checks and expiration date monitoring</li>
+                                    <li>Proper storage facilities with temperature control</li>
+                                    <li>Direct partnerships with reputable brands and suppliers</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Do you offer organic products?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Yes! We have a dedicated section for organic products including:</p>
+                                <ul>
+                                    <li>Organic fruits and vegetables</li>
+                                    <li>Organic dairy products</li>
+                                    <li>Organic grains and pulses</li>
+                                    <li>Natural and chemical-free personal care items</li>
+                                </ul>
+                                <p>Look for the "Organic" label on our products.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Can I request a product that's not listed?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Absolutely! We welcome product suggestions. You can:</p>
+                                <ul>
+                                    <li>Use the contact form on our website</li>
+                                    <li>Call our customer service</li>
+                                    <li>Speak to our store manager during your visit</li>
+                                </ul>
+                                <p>We'll do our best to source requested products for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account & Security -->
+                    <div class="faq-section" data-category="account">
+                        <h2><i class="fas fa-user-shield"></i> Account & Security</h2>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>How do I create an account?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Creating an account is easy and free:</p>
+                                <ol>
+                                    <li>Click on "Register" in the top navigation</li>
+                                    <li>Fill in your details (name, email, phone number)</li>
+                                    <li>Create a secure password</li>
+                                    <li>Verify your email address</li>
+                                    <li>Start shopping!</li>
+                                </ol>
+                                <p>With an account, you can track orders, save favorites, and get exclusive deals.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>I forgot my password. What should I do?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Click on "Login" and then "Forgot Password." Enter your email address, and we'll send you a link to reset your password. If you need further assistance, contact our customer service.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <span>Is my personal information secure?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Yes, we take your privacy and security seriously:</p>
+                                <ul>
+                                    <li>SSL encryption for all data transmission</li>
+                                    <li>Secure payment processing</li>
+                                    <li>We never share your personal information with third parties</li>
+                                    <li>Regular security audits and updates</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-promo">
+                    <h2>Still have questions?</h2>
+                    <p>Our customer service team is here to help you 7 days a week</p>
+                    <a href="contact.html" class="promo-btn">
+                        <i class="fas fa-headset"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // FAQ Data
+        const faqData = [
+            // Ordering & Payment
+            { 
+                category: 'ordering',
+                question: 'How do I place an order?',
+                answer: 'To place an order: 1) Browse our products and add items to your cart, 2) Click on the cart icon and review your items, 3) Proceed to checkout, 4) Enter your delivery details and payment information, 5) Confirm your order. You\'ll receive an order confirmation email with all the details.'
+            },
+            {
+                category: 'ordering',
+                question: 'What payment methods do you accept?',
+                answer: 'We accept Mobile Money (MTN, Airtel), Credit/Debit Cards (Visa, MasterCard), Cash on Delivery (within Kampala), and Bank Transfer.'
+            },
+            // Add more FAQ items as needed
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadFooter();
+            updateUserDisplay();
+            updateCartCount();
+            setupLogoutButton();
+            setupFAQFunctionality();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2024 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+        }
+
+        // Setup FAQ functionality
+        function setupFAQFunctionality() {
+            // FAQ accordion functionality
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    const answer = question.nextElementSibling;
+                    
+                    // Close all other items
+                    document.querySelectorAll('.faq-item').forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.faq-answer').classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current item
+                    item.classList.toggle('active');
+                    answer.classList.toggle('active');
+                });
+            });
+
+            // FAQ category filtering
+            document.querySelectorAll('.faq-category').forEach(category => {
+                category.addEventListener('click', () => {
+                    const selectedCategory = category.getAttribute('data-category');
+                    
+                    // Update active category
+                    document.querySelectorAll('.faq-category').forEach(cat => {
+                        cat.classList.remove('active');
+                    });
+                    category.classList.add('active');
+                    
+                    // Filter FAQs
+                    filterFAQs(selectedCategory);
+                });
+            });
+
+            // FAQ search functionality
+            const faqSearch = document.getElementById('faq-search');
+            if (faqSearch) {
+                faqSearch.addEventListener('input', handleFAQSearch);
+            }
+        }
+
+        // Filter FAQs by category
+        function filterFAQs(category) {
+            const faqSections = document.querySelectorAll('.faq-section');
+            const noResults = document.getElementById('no-results');
+            let visibleItems = 0;
+
+            faqSections.forEach(section => {
+                const sectionCategory = section.getAttribute('data-category');
+                const items = section.querySelectorAll('.faq-item');
+                let sectionVisible = false;
+
+                if (category === 'all' || sectionCategory === category) {
+                    section.style.display = 'block';
+                    items.forEach(item => {
+                        item.style.display = 'block';
+                        visibleItems++;
+                    });
+                    sectionVisible = true;
+                } else {
+                    section.style.display = 'none';
+                    items.forEach(item => {
+                        item.style.display = 'none';
+                    });
+                }
+
+                // Show/hide section headers based on visibility
+                if (sectionVisible) {
+                    section.style.display = 'block';
+                }
+            });
+
+            // Show no results message if no items are visible
+            if (visibleItems === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Handle FAQ search
+        function handleFAQSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            const noResults = document.getElementById('no-results');
+            let visibleItems = 0;
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    visibleItems++;
+                    
+                    // Ensure parent section is visible
+                    const section = item.closest('.faq-section');
+                    if (section) {
+                        section.style.display = 'block';
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Show/hide sections based on visible items
+            document.querySelectorAll('.faq-section').forEach(section => {
+                const visibleSectionItems = section.querySelectorAll('.faq-item[style="display: block"]');
+                if (visibleSectionItems.length === 0) {
+                    section.style.display = 'none';
+                }
+            });
+
+            // Show no results message
+            if (visibleItems === 0 && searchTerm) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Setup logout button
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+            } else {
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            alert('You have been logged out successfully!');
+            window.location.reload();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+    </script>
+</body>
+</html>

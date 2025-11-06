@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Shell Rimula Express Supermarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .about-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .about-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .about-header h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .about-header p {
+            font-size: 1.2rem;
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .about-section {
+            margin-bottom: 4rem;
+        }
+        
+        .about-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .story-content h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .story-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .value-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .value-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .team-image {
+            width: 100%;
+            height: 250px;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary);
+        }
+        
+        .team-info {
+            padding: 1.5rem;
+        }
+        
+        .team-info h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-info .position {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .mission-vision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .mission-card, .vision-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .mission-card h3, .vision-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .mission-icon, .vision-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .story-grid,
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-basket"></i>
+                    Shell <span>Rimula</span> Express
+                </a>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search for products...">
+            </div>
+            <div class="user-actions">
+                <div id="auth-buttons">
+                    <a href="login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+                <a href="cart.html" id="nav-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart <span id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="all-products.html">All Products</a></li>
+                <li><a href="deals.html">Today's Deals</a></li>
+                <li><a href="categories/groceries.html">Groceries</a></li>
+                <li><a href="categories/electronics.html">Electronics</a></li>
+                <li><a href="categories/fashion.html">Fashion</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>></span>
+                <span>About Us</span>
+            </div>
+            
+            <div class="about-container">
+                <div class="about-header">
+                    <h1>About Shell Rimula Express</h1>
+                    <p>Your trusted partner for quality products and exceptional service since 2010. We're committed to making your shopping experience convenient, affordable, and enjoyable.</p>
+                </div>
+                
+                <div class="about-section">
+                    <div class="story-grid">
+                        <div class="story-content">
+                            <h3>Our Humble Beginnings</h3>
+                            <p>Shell Rimula Express started as a small neighborhood store in Kampala with a simple mission: to provide fresh, quality products at affordable prices to our community. What began as a single store has grown into one of Kampala's most trusted supermarkets.</p>
+                            <p>Founded by Mr. Sheba Mugisha, our supermarket has always believed in putting customers first. We understand that every shopping experience matters, and we strive to make each visit better than the last.</p>
+                        </div>
+                        <div class="story-image">
+                            <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
+                                <i class="fas fa-store" style="font-size: 4rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="story-grid">
+                        <div class="story-image">
+                            <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
+                                <i class="fas fa-chart-line" style="font-size: 4rem;"></i>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            <h3>Our Growth Journey</h3>
+                            <p>Over the years, we've expanded our product range to include everything from daily groceries to electronics, fashion, and household items. We've embraced technology to bring you convenient online shopping while maintaining the personal touch that made us successful.</p>
+                            <p>Today, we serve thousands of satisfied customers across Kampala, offering both in-store shopping and convenient delivery services to your doorstep.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Our Mission & Vision</h2>
+                    <div class="mission-vision">
+                        <div class="mission-card">
+                            <div class="mission-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h3>Our Mission</h3>
+                            <p>To provide our customers with the highest quality products at competitive prices, delivered with exceptional service that exceeds expectations. We aim to be the most trusted and convenient shopping destination in Kampala.</p>
+                        </div>
+                        <div class="vision-card">
+                            <div class="vision-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h3>Our Vision</h3>
+                            <p>To become Uganda's leading retail chain, known for innovation, quality, and customer satisfaction. We envision a future where shopping is seamless, enjoyable, and accessible to everyone in our community.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Our Values</h2>
+                    <div class="values-grid">
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3>Quality First</h3>
+                            <p>We never compromise on quality. Every product on our shelves meets our strict standards for freshness and excellence.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <h3>Affordable Prices</h3>
+                            <p>We believe everyone deserves access to quality products without breaking the bank. Our prices are always competitive.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Customer Focus</h3>
+                            <p>Our customers are at the heart of everything we do. Your satisfaction is our ultimate measure of success.</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>Trust & Integrity</h3>
+                            <p>We build relationships based on trust, transparency, and honesty in all our business dealings.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>By The Numbers</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">14+</div>
+                            <div class="stat-label">Years of Service</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">10,000+</div>
+                            <div class="stat-label">Happy Customers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">2,500+</div>
+                            <div class="stat-label">Products Available</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Online Support</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Meet Our Team</h2>
+                    <div class="team-grid">
+                        <div class="team-card">
+                            <div class="team-image">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="team-info">
+                                <h3>Sheba Mugisha</h3>
+                                <div class="position">Founder & CEO</div>
+                                <p>With over 15 years of experience in retail, Sheba leads our vision and ensures we stay true to our values.</p>
+                            </div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-image">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="team-info">
+                                <h3>Sarah Namugga</h3>
+                                <div class="position">Operations Manager</div>
+                                <p>Sarah ensures our daily operations run smoothly and our customers receive the best service possible.</p>
+                            </div>
+                        </div>
+                        <div class="team-card">
+                            <div class="team-image">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="team-info">
+                                <h3>David Kato</h3>
+                                <div class="position">Head of Procurement</div>
+                                <p>David sources the finest products and maintains relationships with our trusted suppliers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer will be loaded here by JavaScript -->
+    <div id="footer"></div>
+
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadFooter();
+            updateUserDisplay();
+            updateCartCount();
+            setupLogoutButton();
+        });
+
+        // Load footer using JavaScript
+        function loadFooter() {
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2024 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
+                });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+        }
+
+        // Setup logout button
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+            } else {
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            alert('You have been logged out successfully!');
+            window.location.reload();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+    </script>
+</body>
+</html>
