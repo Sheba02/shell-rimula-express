@@ -6,6 +6,86 @@
     <title>Shell Rimula Express Supermarket - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Product Image Styles */
+        .product-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f5f5f5; /* Added fallback background */
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Placeholder image styling */
+        .placeholder-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #888;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -140,41 +220,41 @@
     <div id="footer"></div>
 
     <script>
-        // Product data
+        // Product data with actual image files
         const products = [
             // Groceries
-            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "🥛", discount: 0 },
-            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "🍞", discount: 10 },
-            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "🥚", discount: 0 },
-            { id: 4, name: "Bananas (1kg)", price: 1.99, category: "groceries", image: "🍌", discount: 5 },
-            { id: 5, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", image: "🍗", discount: 0 },
-            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "🍝", discount: 15 },
-            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "🍅", discount: 0 },
-            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "🍚", discount: 0 },
+            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "milk.jpg", discount: 0 },
+            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "bread.jpg", discount: 10 },
+            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "eggs.jpg", discount: 0 },
+            { id: 4, name: "Bananas (1kg)", price: 1.99, category: "groceries", image: "bananas.jpg", discount: 5 },
+            { id: 5, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", image: "chicken.jpg", discount: 0 },
+            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "pasta.jpg", discount: 15 },
+            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "tomato-sauce.jpg", discount: 0 },
+            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "rice.jpg", discount: 0 },
             
             // Drinks
-            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 20 },
-            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "🥤", discount: 0 },
-            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "💧", discount: 0 },
-            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "🧃", discount: 10 },
+            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "orange-juice.jpg", discount: 20 },
+            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "coca-cola.jpg", discount: 0 },
+            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "water.jpg", discount: 0 },
+            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "apple-juice.jpg", discount: 10 },
             
             // Snacks
-            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "🥔", discount: 15 },
-            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "🍫", discount: 0 },
-            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "🍪", discount: 25 },
-            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "🍿", discount: 0 },
+            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "chips.jpg", discount: 15 },
+            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "chocolate.jpg", discount: 0 },
+            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "cookies.jpg", discount: 25 },
+            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "popcorn.jpg", discount: 0 },
             
             // Personal Care
-            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "🧴", discount: 20 },
-            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "🧴", discount: 0 },
-            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "🦷", discount: 10 },
-            { id: 40, name: "Deodorant", price: 4.00, category: "personal-care", image: "🧴", discount: 0 },
+            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "shampoo.jpg", discount: 20 },
+            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "lotion.jpg", discount: 0 },
+            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "toothpaste.jpg", discount: 10 },
+            { id: 40, name: "Deodorant", price: 4.00, category: "personal-care", image: "deodorant.jpg", discount: 0 },
             
             // Electronics
-            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "🎧", discount: 30 },
-            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "🔌", discount: 0 },
-            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "🔊", discount: 25 },
-            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "🔌", discount: 0 }
+            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "earbuds.jpg", discount: 30 },
+            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "charger.jpg", discount: 0 },
+            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "speaker.jpg", discount: 25 },
+            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "usb-cable.jpg", discount: 0 }
         ];
 
         // Initialize the page
@@ -197,6 +277,12 @@
                 })
                 .catch(error => {
                     console.error('Error loading footer:', error);
+                    // Create a simple footer if external file fails
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2023 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
                 });
         }
 
@@ -245,7 +331,7 @@
             });
         }
 
-        // Create product card
+        // Create product card with actual images
         function createProductCard(product, showDiscount = false) {
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -255,7 +341,10 @@
             
             card.innerHTML = `
                 ${product.discount > 0 && showDiscount ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
-                <div class="product-image">${product.image}</div>
+                <div class="product-image">
+                    <img src="assets/products/${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}';">
+                </div>
                 <h3>${product.name}</h3>
                 <div class="product-price">
                     ${discountPrice && showDiscount ? 

@@ -6,6 +6,86 @@
     <title>All Products - Shell Rimula Express Supermarket</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Product Image Styles */
+        .product-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem 0;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Products Header */
+        .products-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .category-title {
+            margin: 0;
+        }
+
+        .products-header .search-container {
+            flex: 1;
+            max-width: 300px;
+            margin-left: auto;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -21,10 +101,23 @@
                 <input type="text" id="search-input" placeholder="Search for products...">
             </div>
             <div class="user-actions">
-                <a href="login.html" id="nav-login">
-                    <i class="fas fa-user"></i>
-                    <span id="login-text">Login</span>
-                </a>
+                <div id="auth-buttons">
+                    <a href="login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome" style="display: none;">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
                 <a href="cart.html" id="nav-cart">
                     <i class="fas fa-shopping-cart"></i>
                     Cart <span id="cart-count">0</span>
@@ -78,105 +171,77 @@
     <div id="footer"></div>
 
     <script>
-        // Product data
+        // Product data with actual image files (same as index.html)
         const products = [
             // Groceries
-            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "🥛" },
-            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "🍞" },
-            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "🥚" },
-            { id: 4, name: "Bananas (1kg)", price: 1.99, category: "groceries", image: "🍌" },
-            { id: 5, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", image: "🍗" },
-            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "🍝" },
-            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "🍅" },
-            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "🍚" },
-            { id: 9, name: "Potatoes (2kg)", price: 3.50, category: "groceries", image: "🥔" },
-            { id: 10, name: "Cheddar Cheese (200g)", price: 4.75, category: "groceries", image: "🧀" },
-            { id: 11, name: "Olive Oil (500ml)", price: 7.99, category: "groceries", image: "🫒" },
-            { id: 12, name: "Frozen Vegetables (1kg)", price: 3.25, category: "groceries", image: "🥦" },
+            { id: 1, name: "Fresh Milk", price: 3.50, category: "groceries", image: "milk.jpg", discount: 0 },
+            { id: 2, name: "Whole Wheat Bread", price: 2.75, category: "groceries", image: "bread.jpg", discount: 10 },
+            { id: 3, name: "Organic Eggs (12)", price: 4.25, category: "groceries", image: "eggs.jpg", discount: 0 },
+            { id: 4, name: "Bananas (1kg)", price: 1.99, category: "groceries", image: "bananas.jpg", discount: 5 },
+            { id: 5, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", image: "chicken.jpg", discount: 0 },
+            { id: 6, name: "Pasta (500g)", price: 1.75, category: "groceries", image: "pasta.jpg", discount: 15 },
+            { id: 7, name: "Tomato Sauce", price: 2.25, category: "groceries", image: "tomato-sauce.jpg", discount: 0 },
+            { id: 8, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", image: "rice.jpg", discount: 0 },
+            { id: 9, name: "Potatoes (2kg)", price: 3.50, category: "groceries", image: "potatoes.jpg", discount: 0 },
+            { id: 10, name: "Cheddar Cheese (200g)", price: 4.75, category: "groceries", image: "cheese.jpg", discount: 0 },
+            { id: 11, name: "Olive Oil (500ml)", price: 7.99, category: "groceries", image: "olive-oil.jpg", discount: 0 },
+            { id: 12, name: "Frozen Vegetables (1kg)", price: 3.25, category: "groceries", image: "vegetables.jpg", discount: 0 },
             
             // Drinks
-            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "🧃" },
-            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "🥤" },
-            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "💧" },
-            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "🧃" },
-            { id: 17, name: "Energy Drink", price: 2.00, category: "drinks", image: "⚡" },
-            { id: 18, name: "Green Tea (20 bags)", price: 4.50, category: "drinks", image: "🍵" },
-            { id: 19, name: "Coffee (250g)", price: 6.75, category: "drinks", image: "☕" },
-            { id: 20, name: "Red Wine", price: 12.99, category: "drinks", image: "🍷" },
-            { id: 21, name: "Beer (6 pack)", price: 9.99, category: "drinks", image: "🍺" },
-            { id: 22, name: "Sparkling Water (1L)", price: 1.50, category: "drinks", image: "💧" },
-            { id: 23, name: "Iced Tea (1L)", price: 2.25, category: "drinks", image: "🧃" },
-            { id: 24, name: "Sports Drink", price: 2.75, category: "drinks", image: "🧃" },
+            { id: 13, name: "Orange Juice (1L)", price: 3.25, category: "drinks", image: "orange-juice.jpg", discount: 20 },
+            { id: 14, name: "Coca Cola (2L)", price: 2.50, category: "drinks", image: "coca-cola.jpg", discount: 0 },
+            { id: 15, name: "Mineral Water (6x1L)", price: 3.99, category: "drinks", image: "water.jpg", discount: 0 },
+            { id: 16, name: "Apple Juice (1L)", price: 3.25, category: "drinks", image: "apple-juice.jpg", discount: 10 },
+            { id: 17, name: "Energy Drink", price: 2.00, category: "drinks", image: "energy-drink.jpg", discount: 0 },
+            { id: 18, name: "Green Tea (20 bags)", price: 4.50, category: "drinks", image: "green-tea.jpg", discount: 0 },
+            { id: 19, name: "Coffee (250g)", price: 6.75, category: "drinks", image: "coffee.jpg", discount: 0 },
+            { id: 20, name: "Red Wine", price: 12.99, category: "drinks", image: "red-wine.jpg", discount: 0 },
+            { id: 21, name: "Beer (6 pack)", price: 9.99, category: "drinks", image: "beer.jpg", discount: 0 },
+            { id: 22, name: "Sparkling Water (1L)", price: 1.50, category: "drinks", image: "sparkling-water.jpg", discount: 0 },
+            { id: 23, name: "Iced Tea (1L)", price: 2.25, category: "drinks", image: "iced-tea.jpg", discount: 0 },
+            { id: 24, name: "Sports Drink", price: 2.75, category: "drinks", image: "sports-drink.jpg", discount: 0 },
             
             // Snacks
-            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "🥔" },
-            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "🍫" },
-            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "🍪" },
-            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "🍿" },
-            { id: 29, name: "Nuts Mix (200g)", price: 5.50, category: "snacks", image: "🥜" },
-            { id: 30, name: "Granola Bars (6 pack)", price: 4.25, category: "snacks", image: "🍫" },
-            { id: 31, name: "Pretzels", price: 2.75, category: "snacks", image: "🥨" },
-            { id: 32, name: "Crackers", price: 2.25, category: "snacks", image: "🍘" },
-            { id: 33, name: "Dried Fruits (200g)", price: 4.75, category: "snacks", image: "🍓" },
-            { id: 34, name: "Beef Jerky", price: 6.99, category: "snacks", image: "🥩" },
-            { id: 35, name: "Rice Cakes", price: 2.50, category: "snacks", image: "🍘" },
-            { id: 36, name: "Protein Bar", price: 2.99, category: "snacks", image: "🍫" },
+            { id: 25, name: "Potato Chips", price: 2.50, category: "snacks", image: "chips.jpg", discount: 15 },
+            { id: 26, name: "Chocolate Bar", price: 1.75, category: "snacks", image: "chocolate.jpg", discount: 0 },
+            { id: 27, name: "Cookies (300g)", price: 3.25, category: "snacks", image: "cookies.jpg", discount: 25 },
+            { id: 28, name: "Popcorn", price: 2.00, category: "snacks", image: "popcorn.jpg", discount: 0 },
+            { id: 29, name: "Nuts Mix (200g)", price: 5.50, category: "snacks", image: "nuts.jpg", discount: 0 },
+            { id: 30, name: "Granola Bars (6 pack)", price: 4.25, category: "snacks", image: "granola-bars.jpg", discount: 0 },
+            { id: 31, name: "Pretzels", price: 2.75, category: "snacks", image: "pretzels.jpg", discount: 0 },
+            { id: 32, name: "Crackers", price: 2.25, category: "snacks", image: "crackers.jpg", discount: 0 },
+            { id: 33, name: "Dried Fruits (200g)", price: 4.75, category: "snacks", image: "dried-fruits.jpg", discount: 0 },
+            { id: 34, name: "Beef Jerky", price: 6.99, category: "snacks", image: "beef-jerky.jpg", discount: 0 },
+            { id: 35, name: "Rice Cakes", price: 2.50, category: "snacks", image: "rice-cakes.jpg", discount: 0 },
+            { id: 36, name: "Protein Bar", price: 2.99, category: "snacks", image: "protein-bar.jpg", discount: 0 },
             
             // Personal Care
-            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "🧴" },
-            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "🧴" },
-            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "🦷" },
-            { id: 40, name: "Deodorant", price: 4.00, category: "personal-care", image: "🧴" },
-            { id: 41, name: "Face Cream", price: 8.75, category: "personal-care", image: "🧴" },
-            { id: 42, name: "Perfume", price: 25.99, category: "personal-care", image: "💨" },
-            { id: 43, name: "Razor Blades (4 pack)", price: 12.50, category: "personal-care", image: "🪒" },
-            { id: 44, name: "Hair Gel", price: 5.25, category: "personal-care", image: "🧴" },
-            { id: 45, name: "Sunscreen", price: 9.99, category: "personal-care", image: "🧴" },
-            { id: 46, name: "Makeup Kit", price: 19.99, category: "personal-care", image: "💄" },
-            { id: 47, name: "Conditioner", price: 5.50, category: "personal-care", image: "🧴" },
-            { id: 48, name: "Body Wash", price: 4.25, category: "personal-care", image: "🧴" },
-            
-            // Household
-            { id: 49, name: "Laundry Detergent", price: 8.99, category: "household", image: "🧼" },
-            { id: 50, name: "Dish Soap", price: 2.50, category: "household", image: "🧼" },
-            { id: 51, name: "Toilet Paper (12 rolls)", price: 6.99, category: "household", image: "🧻" },
-            { id: 52, name: "Paper Towels (6 rolls)", price: 5.50, category: "household", image: "🧻" },
-            { id: 53, name: "All-Purpose Cleaner", price: 3.75, category: "household", image: "🧴" },
-            { id: 54, name: "Trash Bags (30 count)", price: 4.99, category: "household", image: "🗑️" },
-            { id: 55, name: "Air Freshener", price: 2.99, category: "household", image: "💨" },
-            { id: 56, name: "Batteries (AA, 8 pack)", price: 7.50, category: "household", image: "🔋" },
-            { id: 57, name: "Light Bulbs (4 pack)", price: 9.25, category: "household", image: "💡" },
-            { id: 58, name: "Kitchen Sponges (10 pack)", price: 3.25, category: "household", image: "🧽" },
-            { id: 59, name: "Fabric Softener", price: 5.75, category: "household", image: "🧴" },
-            { id: 60, name: "Glass Cleaner", price: 3.50, category: "household", image: "🧴" },
-            
-            // Baby Care
-            { id: 61, name: "Baby Diapers (30 count)", price: 12.99, category: "baby-care", image: "👶" },
-            { id: 62, name: "Baby Wipes (80 count)", price: 4.75, category: "baby-care", image: "🧻" },
-            { id: 63, name: "Baby Shampoo", price: 5.25, category: "baby-care", image: "🧴" },
-            { id: 64, name: "Baby Food (4 jars)", price: 6.50, category: "baby-care", image: "🍎" },
-            { id: 65, name: "Baby Lotion", price: 4.99, category: "baby-care", image: "🧴" },
-            { id: 66, name: "Baby Powder", price: 3.75, category: "baby-care", image: "🧴" },
-            { id: 67, name: "Baby Cereal", price: 4.25, category: "baby-care", image: "🥣" },
-            { id: 68, name: "Baby Bottles (3 pack)", price: 8.99, category: "baby-care", image: "🍼" },
-            { id: 69, name: "Pacifiers (2 pack)", price: 5.50, category: "baby-care", image: "👶" },
-            { id: 70, name: "Baby Toys", price: 12.99, category: "baby-care", image: "🧸" },
-            { id: 71, name: "Baby Oil", price: 4.50, category: "baby-care", image: "🧴" },
-            { id: 72, name: "Baby Bath Tub", price: 15.99, category: "baby-care", image: "🛁" },
+            { id: 37, name: "Shampoo", price: 5.99, category: "personal-care", image: "shampoo.jpg", discount: 20 },
+            { id: 38, name: "Body Lotion", price: 4.50, category: "personal-care", image: "lotion.jpg", discount: 0 },
+            { id: 39, name: "Toothpaste", price: 3.25, category: "personal-care", image: "toothpaste.jpg", discount: 10 },
+            { id: 40, name: "Deodorant", price: 4.00, category: "personal-care", image: "deodorant.jpg", discount: 0 },
+            { id: 41, name: "Face Cream", price: 8.75, category: "personal-care", image: "face-cream.jpg", discount: 0 },
+            { id: 42, name: "Perfume", price: 25.99, category: "personal-care", image: "perfume.jpg", discount: 0 },
+            { id: 43, name: "Razor Blades (4 pack)", price: 12.50, category: "personal-care", image: "razor-blades.jpg", discount: 0 },
+            { id: 44, name: "Hair Gel", price: 5.25, category: "personal-care", image: "hair-gel.jpg", discount: 0 },
+            { id: 45, name: "Sunscreen", price: 9.99, category: "personal-care", image: "sunscreen.jpg", discount: 0 },
+            { id: 46, name: "Makeup Kit", price: 19.99, category: "personal-care", image: "makeup-kit.jpg", discount: 0 },
+            { id: 47, name: "Conditioner", price: 5.50, category: "personal-care", image: "conditioner.jpg", discount: 0 },
+            { id: 48, name: "Body Wash", price: 4.25, category: "personal-care", image: "body-wash.jpg", discount: 0 },
             
             // Electronics
-            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "🎧" },
-            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "🔌" },
-            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "🔊" },
-            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "🔌" },
-            { id: 77, name: "Power Bank", price: 24.99, category: "electronics", image: "🔋" },
-            { id: 78, name: "Smartwatch", price: 89.99, category: "electronics", image: "⌚" },
-            { id: 79, name: "Tablet Case", price: 15.99, category: "electronics", image: "📱" },
-            { id: 80, name: "Wireless Mouse", price: 19.99, category: "electronics", image: "🖱️" },
-            { id: 81, name: "HDMI Cable", price: 9.99, category: "electronics", image: "🔌" },
-            { id: 82, name: "E-reader", price: 79.99, category: "electronics", image: "📖" },
-            { id: 83, name: "Phone Case", price: 12.99, category: "electronics", image: "📱" },
-            { id: 84, name: "Laptop Stand", price: 24.99, category: "electronics", image: "💻" }
+            { id: 73, name: "Wireless Earbuds", price: 49.99, category: "electronics", image: "earbuds.jpg", discount: 30 },
+            { id: 74, name: "Phone Charger", price: 12.99, category: "electronics", image: "charger.jpg", discount: 0 },
+            { id: 75, name: "Bluetooth Speaker", price: 29.99, category: "electronics", image: "speaker.jpg", discount: 25 },
+            { id: 76, name: "USB Cable", price: 8.50, category: "electronics", image: "usb-cable.jpg", discount: 0 },
+            { id: 77, name: "Power Bank", price: 24.99, category: "electronics", image: "power-bank.jpg", discount: 0 },
+            { id: 78, name: "Smartwatch", price: 89.99, category: "electronics", image: "smartwatch.jpg", discount: 0 },
+            { id: 79, name: "Tablet Case", price: 15.99, category: "electronics", image: "tablet-case.jpg", discount: 0 },
+            { id: 80, name: "Wireless Mouse", price: 19.99, category: "electronics", image: "wireless-mouse.jpg", discount: 0 },
+            { id: 81, name: "HDMI Cable", price: 9.99, category: "electronics", image: "hdmi-cable.jpg", discount: 0 },
+            { id: 82, name: "E-reader", price: 79.99, category: "electronics", image: "e-reader.jpg", discount: 0 },
+            { id: 83, name: "Phone Case", price: 12.99, category: "electronics", image: "phone-case.jpg", discount: 0 },
+            { id: 84, name: "Laptop Stand", price: 24.99, category: "electronics", image: "laptop-stand.jpg", discount: 0 }
         ];
 
         // App state
@@ -189,7 +254,9 @@
             loadAllProducts();
             setupEventListeners();
             loadFooter();
+            updateUserDisplay();
             updateCartCount();
+            setupLogoutButton();
         });
 
         // Load footer using JavaScript
@@ -201,6 +268,12 @@
                 })
                 .catch(error => {
                     console.error('Error loading footer:', error);
+                    // Create a simple footer if external file fails
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2023 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
                 });
         }
 
@@ -210,6 +283,22 @@
             const searchInput = document.getElementById('products-search-input');
             if (searchInput) {
                 searchInput.addEventListener('input', handleSearch);
+            }
+
+            // Header search functionality
+            const headerSearchInput = document.getElementById('search-input');
+            if (headerSearchInput) {
+                headerSearchInput.addEventListener('input', handleHeaderSearch);
+            }
+        }
+
+        // Handle header search
+        function handleHeaderSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                // Redirect to all products page with search
+                window.location.href = `all-products.html?search=${encodeURIComponent(searchTerm)}`;
             }
         }
 
@@ -231,7 +320,19 @@
 
         // Load all products (initial load)
         function loadAllProducts() {
-            filteredProducts = [...products];
+            // Check for URL search parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchParam = urlParams.get('search');
+            
+            if (searchParam) {
+                document.getElementById('products-search-input').value = searchParam;
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchParam.toLowerCase())
+                );
+            } else {
+                filteredProducts = [...products];
+            }
+            
             loadFilteredProducts();
         }
 
@@ -259,15 +360,28 @@
             createPaginationButtons(totalPages, paginationContainer);
         }
 
-        // Create product card
+        // Create product card with actual images
         function createProductCard(product) {
             const card = document.createElement('div');
             card.className = 'product-card';
             
+            const discountPrice = product.discount > 0 ? 
+                (product.price * (1 - product.discount / 100)).toFixed(2) : null;
+            
             card.innerHTML = `
-                <div class="product-image">${product.image}</div>
+                ${product.discount > 0 ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
+                <div class="product-image">
+                    <img src="assets/products/${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}';">
+                </div>
                 <h3>${product.name}</h3>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
+                <div class="product-price">
+                    ${discountPrice ? 
+                        `<span class="original-price">$${product.price.toFixed(2)}</span>
+                         <span class="discount-price">$${discountPrice}</span>` :
+                        `$${product.price.toFixed(2)}`
+                    }
+                </div>
                 <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
             `;
             
@@ -281,15 +395,18 @@
         function createPaginationButtons(totalPages, paginationContainer) {
             paginationContainer.innerHTML = '';
             
+            if (totalPages <= 1) return;
+            
             // Previous button
             const prevButton = document.createElement('button');
             prevButton.className = 'page-btn';
-            prevButton.innerHTML = '&laquo;';
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
             prevButton.disabled = currentPage === 1;
             prevButton.addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(prevButton);
@@ -302,6 +419,7 @@
                 pageButton.addEventListener('click', () => {
                     currentPage = i;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
                 paginationContainer.appendChild(pageButton);
             }
@@ -309,12 +427,13 @@
             // Next button
             const nextButton = document.createElement('button');
             nextButton.className = 'page-btn';
-            nextButton.innerHTML = '&raquo;';
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
             nextButton.disabled = currentPage === totalPages;
             nextButton.addEventListener('click', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(nextButton);
@@ -333,7 +452,8 @@
                 cart.push({
                     id: product.id,
                     name: product.name,
-                    price: product.price,
+                    price: product.discount > 0 ? 
+                        (product.price * (1 - product.discount / 100)) : product.price,
                     quantity: 1,
                     image: product.image
                 });
@@ -349,14 +469,69 @@
             alert(`${product.name} added to cart!`);
         }
 
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            const loginText = document.getElementById('login-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                // User is logged in
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+                
+                // Update login text to show user is logged in (for other pages)
+                if (loginText) {
+                    loginText.textContent = currentUser.name.split(' ')[0]; // First name only
+                }
+            } else {
+                // User is not logged in
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+                
+                if (loginText) {
+                    loginText.textContent = 'Login';
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            
+            // Show logout success message
+            alert('You have been logged out successfully!');
+            
+            // Refresh the page to update the UI
+            window.location.reload();
+        }
+
+        // Setup logout button event listener
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
         // Update cart count
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) {
-                cartCount.textContent = totalItems;
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
             }
         }
     </script>

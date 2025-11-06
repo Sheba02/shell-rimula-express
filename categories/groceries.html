@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Product Image Styles */
+        .product-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
         .subcategories {
             display: flex;
             overflow-x: auto;
@@ -47,6 +71,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
+            z-index: 2;
         }
         
         .product-card {
@@ -65,6 +90,102 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem 0;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Products Header */
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .category-title {
+            margin: 0;
+        }
+
+        .products-header .search-container {
+            flex: 1;
+            max-width: 300px;
+            margin-left: auto;
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -81,10 +202,23 @@
                 <input type="text" id="search-input" placeholder="Search for products...">
             </div>
             <div class="user-actions">
-                <a href="../login.html" id="nav-login">
-                    <i class="fas fa-user"></i>
-                    <span id="login-text">Login</span>
-                </a>
+                <div id="auth-buttons">
+                    <a href="../login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="../register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome" style="display: none;">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
                 <a href="../cart.html" id="nav-cart">
                     <i class="fas fa-shopping-cart"></i>
                     Cart <span id="cart-count">0</span>
@@ -150,110 +284,110 @@
     <div id="footer"></div>
 
     <script>
-        // Extensive groceries product data
+        // Extensive groceries product data with actual image files
         const groceriesProducts = [
             // Fresh Produce
-            { id: 101, name: "Fresh Apples (1kg)", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "🍎", discount: 0 },
-            { id: 102, name: "Bananas (1kg)", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "🍌", discount: 5 },
-            { id: 103, name: "Oranges (1kg)", price: 3.49, category: "groceries", subcategory: "fresh-produce", image: "🍊", discount: 0 },
-            { id: 104, name: "Strawberries (500g)", price: 4.99, category: "groceries", subcategory: "fresh-produce", image: "🍓", discount: 10 },
-            { id: 105, name: "Grapes (1kg)", price: 5.99, category: "groceries", subcategory: "fresh-produce", image: "🍇", discount: 0 },
-            { id: 106, name: "Watermelon", price: 6.99, category: "groceries", subcategory: "fresh-produce", image: "🍉", discount: 15 },
-            { id: 107, name: "Pineapple", price: 3.99, category: "groceries", subcategory: "fresh-produce", image: "🍍", discount: 0 },
-            { id: 108, name: "Mangoes (1kg)", price: 7.99, category: "groceries", subcategory: "fresh-produce", image: "🥭", discount: 8 },
+            { id: 101, name: "Fresh Apples (1kg)", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "apples.jpg", discount: 0 },
+            { id: 102, name: "Bananas (1kg)", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "bananas.jpg", discount: 5 },
+            { id: 103, name: "Oranges (1kg)", price: 3.49, category: "groceries", subcategory: "fresh-produce", image: "oranges.jpg", discount: 0 },
+            { id: 104, name: "Strawberries (500g)", price: 4.99, category: "groceries", subcategory: "fresh-produce", image: "strawberries.jpg", discount: 10 },
+            { id: 105, name: "Grapes (1kg)", price: 5.99, category: "groceries", subcategory: "fresh-produce", image: "grapes.jpg", discount: 0 },
+            { id: 106, name: "Watermelon", price: 6.99, category: "groceries", subcategory: "fresh-produce", image: "watermelon.jpg", discount: 15 },
+            { id: 107, name: "Pineapple", price: 3.99, category: "groceries", subcategory: "fresh-produce", image: "pineapple.jpg", discount: 0 },
+            { id: 108, name: "Mangoes (1kg)", price: 7.99, category: "groceries", subcategory: "fresh-produce", image: "mangoes.jpg", discount: 8 },
             
-            { id: 109, name: "Potatoes (2kg)", price: 3.50, category: "groceries", subcategory: "fresh-produce", image: "🥔", discount: 0 },
-            { id: 110, name: "Carrots (1kg)", price: 2.25, category: "groceries", subcategory: "fresh-produce", image: "🥕", discount: 0 },
-            { id: 111, name: "Tomatoes (1kg)", price: 3.75, category: "groceries", subcategory: "fresh-produce", image: "🍅", discount: 12 },
-            { id: 112, name: "Onions (1kg)", price: 2.50, category: "groceries", subcategory: "fresh-produce", image: "🧅", discount: 0 },
-            { id: 113, name: "Bell Peppers (3 pack)", price: 4.25, category: "groceries", subcategory: "fresh-produce", image: "🫑", discount: 0 },
-            { id: 114, name: "Broccoli", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "🥦", discount: 5 },
-            { id: 115, name: "Lettuce", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "🥬", discount: 0 },
-            { id: 116, name: "Cucumbers (2 pack)", price: 2.75, category: "groceries", subcategory: "fresh-produce", image: "🥒", discount: 0 },
+            { id: 109, name: "Potatoes (2kg)", price: 3.50, category: "groceries", subcategory: "fresh-produce", image: "potatoes.jpg", discount: 0 },
+            { id: 110, name: "Carrots (1kg)", price: 2.25, category: "groceries", subcategory: "fresh-produce", image: "carrots.jpg", discount: 0 },
+            { id: 111, name: "Tomatoes (1kg)", price: 3.75, category: "groceries", subcategory: "fresh-produce", image: "tomatoes.jpg", discount: 12 },
+            { id: 112, name: "Onions (1kg)", price: 2.50, category: "groceries", subcategory: "fresh-produce", image: "onions.jpg", discount: 0 },
+            { id: 113, name: "Bell Peppers (3 pack)", price: 4.25, category: "groceries", subcategory: "fresh-produce", image: "bell-peppers.jpg", discount: 0 },
+            { id: 114, name: "Broccoli", price: 2.99, category: "groceries", subcategory: "fresh-produce", image: "broccoli.jpg", discount: 5 },
+            { id: 115, name: "Lettuce", price: 1.99, category: "groceries", subcategory: "fresh-produce", image: "lettuce.jpg", discount: 0 },
+            { id: 116, name: "Cucumbers (2 pack)", price: 2.75, category: "groceries", subcategory: "fresh-produce", image: "cucumbers.jpg", discount: 0 },
             
             // Dairy & Eggs
-            { id: 117, name: "Fresh Milk (1L)", price: 3.50, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
-            { id: 118, name: "Organic Eggs (12)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "🥚", discount: 0 },
-            { id: 119, name: "Butter (250g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "🧈", discount: 10 },
-            { id: 120, name: "Cheddar Cheese (200g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
-            { id: 121, name: "Yogurt (6 pack)", price: 5.25, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 15 },
-            { id: 122, name: "Cream Cheese (200g)", price: 3.99, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
-            { id: 123, name: "Sour Cream (300g)", price: 2.75, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
-            { id: 124, name: "Mozzarella Cheese (250g)", price: 5.50, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 8 },
+            { id: 117, name: "Fresh Milk (1L)", price: 3.50, category: "groceries", subcategory: "dairy-eggs", image: "milk.jpg", discount: 0 },
+            { id: 118, name: "Organic Eggs (12)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "eggs.jpg", discount: 0 },
+            { id: 119, name: "Butter (250g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "butter.jpg", discount: 10 },
+            { id: 120, name: "Cheddar Cheese (200g)", price: 4.75, category: "groceries", subcategory: "dairy-eggs", image: "cheese.jpg", discount: 0 },
+            { id: 121, name: "Yogurt (6 pack)", price: 5.25, category: "groceries", subcategory: "dairy-eggs", image: "yogurt.jpg", discount: 15 },
+            { id: 122, name: "Cream Cheese (200g)", price: 3.99, category: "groceries", subcategory: "dairy-eggs", image: "cream-cheese.jpg", discount: 0 },
+            { id: 123, name: "Sour Cream (300g)", price: 2.75, category: "groceries", subcategory: "dairy-eggs", image: "sour-cream.jpg", discount: 0 },
+            { id: 124, name: "Mozzarella Cheese (250g)", price: 5.50, category: "groceries", subcategory: "dairy-eggs", image: "mozzarella.jpg", discount: 8 },
             
-            { id: 125, name: "Heavy Cream (500ml)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 0 },
-            { id: 126, name: "Greek Yogurt (500g)", price: 4.99, category: "groceries", subcategory: "dairy-eggs", image: "🥛", discount: 12 },
-            { id: 127, name: "Parmesan Cheese (100g)", price: 3.75, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 0 },
-            { id: 128, name: "Cottage Cheese (500g)", price: 3.25, category: "groceries", subcategory: "dairy-eggs", image: "🧀", discount: 5 },
+            { id: 125, name: "Heavy Cream (500ml)", price: 4.25, category: "groceries", subcategory: "dairy-eggs", image: "heavy-cream.jpg", discount: 0 },
+            { id: 126, name: "Greek Yogurt (500g)", price: 4.99, category: "groceries", subcategory: "dairy-eggs", image: "greek-yogurt.jpg", discount: 12 },
+            { id: 127, name: "Parmesan Cheese (100g)", price: 3.75, category: "groceries", subcategory: "dairy-eggs", image: "parmesan.jpg", discount: 0 },
+            { id: 128, name: "Cottage Cheese (500g)", price: 3.25, category: "groceries", subcategory: "dairy-eggs", image: "cottage-cheese.jpg", discount: 5 },
             
             // Meat & Poultry
-            { id: 129, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", subcategory: "meat-poultry", image: "🍗", discount: 0 },
-            { id: 130, name: "Ground Beef (500g)", price: 7.99, category: "groceries", subcategory: "meat-poultry", image: "🥩", discount: 10 },
-            { id: 131, name: "Pork Chops (4 pieces)", price: 9.75, category: "groceries", subcategory: "meat-poultry", image: "🥓", discount: 0 },
-            { id: 132, name: "Salmon Fillet (300g)", price: 12.99, category: "groceries", subcategory: "meat-poultry", image: "🐟", discount: 15 },
-            { id: 133, name: "Bacon (500g)", price: 6.99, category: "groceries", subcategory: "meat-poultry", image: "🥓", discount: 0 },
-            { id: 134, name: "Turkey Breast (500g)", price: 10.25, category: "groceries", subcategory: "meat-poultry", image: "🦃", discount: 8 },
-            { id: 135, name: "Sausages (6 pack)", price: 5.50, category: "groceries", subcategory: "meat-poultry", image: "🌭", discount: 0 },
-            { id: 136, name: "Whole Chicken", price: 11.99, category: "groceries", subcategory: "meat-poultry", image: "🍗", discount: 12 },
+            { id: 129, name: "Chicken Breast (500g)", price: 8.50, category: "groceries", subcategory: "meat-poultry", image: "chicken.jpg", discount: 0 },
+            { id: 130, name: "Ground Beef (500g)", price: 7.99, category: "groceries", subcategory: "meat-poultry", image: "ground-beef.jpg", discount: 10 },
+            { id: 131, name: "Pork Chops (4 pieces)", price: 9.75, category: "groceries", subcategory: "meat-poultry", image: "pork-chops.jpg", discount: 0 },
+            { id: 132, name: "Salmon Fillet (300g)", price: 12.99, category: "groceries", subcategory: "meat-poultry", image: "salmon.jpg", discount: 15 },
+            { id: 133, name: "Bacon (500g)", price: 6.99, category: "groceries", subcategory: "meat-poultry", image: "bacon.jpg", discount: 0 },
+            { id: 134, name: "Turkey Breast (500g)", price: 10.25, category: "groceries", subcategory: "meat-poultry", image: "turkey.jpg", discount: 8 },
+            { id: 135, name: "Sausages (6 pack)", price: 5.50, category: "groceries", subcategory: "meat-poultry", image: "sausages.jpg", discount: 0 },
+            { id: 136, name: "Whole Chicken", price: 11.99, category: "groceries", subcategory: "meat-poultry", image: "whole-chicken.jpg", discount: 12 },
             
             // Bakery
-            { id: 137, name: "Whole Wheat Bread", price: 2.75, category: "groceries", subcategory: "bakery", image: "🍞", discount: 0 },
-            { id: 138, name: "White Bread", price: 2.25, category: "groceries", subcategory: "bakery", image: "🍞", discount: 0 },
-            { id: 139, name: "Bagels (6 pack)", price: 3.99, category: "groceries", subcategory: "bakery", image: "🥯", discount: 10 },
-            { id: 140, name: "Croissants (4 pack)", price: 4.50, category: "groceries", subcategory: "bakery", image: "🥐", discount: 0 },
-            { id: 141, name: "Muffins (6 pack)", price: 5.25, category: "groceries", subcategory: "bakery", image: "🧁", discount: 15 },
-            { id: 142, name: "Donuts (6 pack)", price: 4.75, category: "groceries", subcategory: "bakery", image: "🍩", discount: 0 },
-            { id: 143, name: "French Baguette", price: 2.99, category: "groceries", subcategory: "bakery", image: "🥖", discount: 0 },
-            { id: 144, name: "Cinnamon Rolls (4 pack)", price: 6.25, category: "groceries", subcategory: "bakery", image: "🍥", discount: 8 },
+            { id: 137, name: "Whole Wheat Bread", price: 2.75, category: "groceries", subcategory: "bakery", image: "bread.jpg", discount: 0 },
+            { id: 138, name: "White Bread", price: 2.25, category: "groceries", subcategory: "bakery", image: "white-bread.jpg", discount: 0 },
+            { id: 139, name: "Bagels (6 pack)", price: 3.99, category: "groceries", subcategory: "bakery", image: "bagels.jpg", discount: 10 },
+            { id: 140, name: "Croissants (4 pack)", price: 4.50, category: "groceries", subcategory: "bakery", image: "croissants.jpg", discount: 0 },
+            { id: 141, name: "Muffins (6 pack)", price: 5.25, category: "groceries", subcategory: "bakery", image: "muffins.jpg", discount: 15 },
+            { id: 142, name: "Donuts (6 pack)", price: 4.75, category: "groceries", subcategory: "bakery", image: "donuts.jpg", discount: 0 },
+            { id: 143, name: "French Baguette", price: 2.99, category: "groceries", subcategory: "bakery", image: "baguette.jpg", discount: 0 },
+            { id: 144, name: "Cinnamon Rolls (4 pack)", price: 6.25, category: "groceries", subcategory: "bakery", image: "cinnamon-rolls.jpg", discount: 8 },
             
             // Pantry
-            { id: 145, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", subcategory: "pantry", image: "🍚", discount: 0 },
-            { id: 146, name: "Pasta (500g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "🍝", discount: 0 },
-            { id: 147, name: "Tomato Sauce", price: 2.25, category: "groceries", subcategory: "pantry", image: "🍅", discount: 0 },
-            { id: 148, name: "Olive Oil (500ml)", price: 7.99, category: "groceries", subcategory: "pantry", image: "🫒", discount: 10 },
-            { id: 149, name: "Flour (1kg)", price: 2.50, category: "groceries", subcategory: "pantry", image: "🌾", discount: 0 },
-            { id: 150, name: "Sugar (1kg)", price: 2.25, category: "groceries", subcategory: "pantry", image: "🍚", discount: 0 },
-            { id: 151, name: "Salt (1kg)", price: 1.50, category: "groceries", subcategory: "pantry", image: "🧂", discount: 0 },
-            { id: 152, name: "Black Pepper (100g)", price: 3.25, category: "groceries", subcategory: "pantry", image: "🌶️", discount: 5 },
+            { id: 145, name: "Basmati Rice (1kg)", price: 4.99, category: "groceries", subcategory: "pantry", image: "rice.jpg", discount: 0 },
+            { id: 146, name: "Pasta (500g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "pasta.jpg", discount: 0 },
+            { id: 147, name: "Tomato Sauce", price: 2.25, category: "groceries", subcategory: "pantry", image: "tomato-sauce.jpg", discount: 0 },
+            { id: 148, name: "Olive Oil (500ml)", price: 7.99, category: "groceries", subcategory: "pantry", image: "olive-oil.jpg", discount: 10 },
+            { id: 149, name: "Flour (1kg)", price: 2.50, category: "groceries", subcategory: "pantry", image: "flour.jpg", discount: 0 },
+            { id: 150, name: "Sugar (1kg)", price: 2.25, category: "groceries", subcategory: "pantry", image: "sugar.jpg", discount: 0 },
+            { id: 151, name: "Salt (1kg)", price: 1.50, category: "groceries", subcategory: "pantry", image: "salt.jpg", discount: 0 },
+            { id: 152, name: "Black Pepper (100g)", price: 3.25, category: "groceries", subcategory: "pantry", image: "black-pepper.jpg", discount: 5 },
             
-            { id: 153, name: "Canned Beans (400g)", price: 1.99, category: "groceries", subcategory: "pantry", image: "🥫", discount: 0 },
-            { id: 154, name: "Canned Corn (400g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "🥫", discount: 0 },
-            { id: 155, name: "Canned Tuna (200g)", price: 2.50, category: "groceries", subcategory: "pantry", image: "🥫", discount: 12 },
-            { id: 156, name: "Peanut Butter (500g)", price: 4.25, category: "groceries", subcategory: "pantry", image: "🥜", discount: 0 },
-            { id: 157, name: "Jam (400g)", price: 3.50, category: "groceries", subcategory: "pantry", image: "🍓", discount: 8 },
-            { id: 158, name: "Honey (500g)", price: 6.99, category: "groceries", subcategory: "pantry", image: "🍯", discount: 0 },
-            { id: 159, name: "Cereal (500g)", price: 4.75, category: "groceries", subcategory: "pantry", image: "🥣", discount: 15 },
-            { id: 160, name: "Oats (1kg)", price: 3.25, category: "groceries", subcategory: "pantry", image: "🌾", discount: 0 },
+            { id: 153, name: "Canned Beans (400g)", price: 1.99, category: "groceries", subcategory: "pantry", image: "canned-beans.jpg", discount: 0 },
+            { id: 154, name: "Canned Corn (400g)", price: 1.75, category: "groceries", subcategory: "pantry", image: "canned-corn.jpg", discount: 0 },
+            { id: 155, name: "Canned Tuna (200g)", price: 2.50, category: "groceries", subcategory: "pantry", image: "canned-tuna.jpg", discount: 12 },
+            { id: 156, name: "Peanut Butter (500g)", price: 4.25, category: "groceries", subcategory: "pantry", image: "peanut-butter.jpg", discount: 0 },
+            { id: 157, name: "Jam (400g)", price: 3.50, category: "groceries", subcategory: "pantry", image: "jam.jpg", discount: 8 },
+            { id: 158, name: "Honey (500g)", price: 6.99, category: "groceries", subcategory: "pantry", image: "honey.jpg", discount: 0 },
+            { id: 159, name: "Cereal (500g)", price: 4.75, category: "groceries", subcategory: "pantry", image: "cereal.jpg", discount: 15 },
+            { id: 160, name: "Oats (1kg)", price: 3.25, category: "groceries", subcategory: "pantry", image: "oats.jpg", discount: 0 },
             
             // Frozen Foods
-            { id: 161, name: "Frozen Vegetables (1kg)", price: 3.25, category: "groceries", subcategory: "frozen", image: "🥦", discount: 0 },
-            { id: 162, name: "Frozen Berries (500g)", price: 5.99, category: "groceries", subcategory: "frozen", image: "🫐", discount: 10 },
-            { id: 163, name: "Frozen Pizza", price: 6.50, category: "groceries", subcategory: "frozen", image: "🍕", discount: 0 },
-            { id: 164, name: "Ice Cream (1L)", price: 4.99, category: "groceries", subcategory: "frozen", image: "🍦", discount: 20 },
-            { id: 165, name: "Frozen French Fries (1kg)", price: 3.75, category: "groceries", subcategory: "frozen", image: "🍟", discount: 0 },
-            { id: 166, name: "Frozen Chicken Nuggets (500g)", price: 5.25, category: "groceries", subcategory: "frozen", image: "🍗", discount: 12 },
-            { id: 167, name: "Frozen Fish Fillets (500g)", price: 8.99, category: "groceries", subcategory: "frozen", image: "🐟", discount: 0 },
-            { id: 168, name: "Frozen Dumplings (500g)", price: 6.75, category: "groceries", subcategory: "frozen", image: "🥟", discount: 8 },
+            { id: 161, name: "Frozen Vegetables (1kg)", price: 3.25, category: "groceries", subcategory: "frozen", image: "frozen-vegetables.jpg", discount: 0 },
+            { id: 162, name: "Frozen Berries (500g)", price: 5.99, category: "groceries", subcategory: "frozen", image: "frozen-berries.jpg", discount: 10 },
+            { id: 163, name: "Frozen Pizza", price: 6.50, category: "groceries", subcategory: "frozen", image: "frozen-pizza.jpg", discount: 0 },
+            { id: 164, name: "Ice Cream (1L)", price: 4.99, category: "groceries", subcategory: "frozen", image: "ice-cream.jpg", discount: 20 },
+            { id: 165, name: "Frozen French Fries (1kg)", price: 3.75, category: "groceries", subcategory: "frozen", image: "french-fries.jpg", discount: 0 },
+            { id: 166, name: "Frozen Chicken Nuggets (500g)", price: 5.25, category: "groceries", subcategory: "frozen", image: "chicken-nuggets.jpg", discount: 12 },
+            { id: 167, name: "Frozen Fish Fillets (500g)", price: 8.99, category: "groceries", subcategory: "frozen", image: "fish-fillets.jpg", discount: 0 },
+            { id: 168, name: "Frozen Dumplings (500g)", price: 6.75, category: "groceries", subcategory: "frozen", image: "dumplings.jpg", discount: 8 },
             
             // Beverages
-            { id: 169, name: "Orange Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "🧃", discount: 0 },
-            { id: 170, name: "Apple Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "🧃", discount: 5 },
-            { id: 171, name: "Coffee (250g)", price: 6.75, category: "groceries", subcategory: "beverages", image: "☕", discount: 0 },
-            { id: 172, name: "Tea Bags (20 pack)", price: 3.50, category: "groceries", subcategory: "beverages", image: "🍵", discount: 10 },
-            { id: 173, name: "Soda (2L)", price: 2.50, category: "groceries", subcategory: "beverages", image: "🥤", discount: 0 },
-            { id: 174, name: "Mineral Water (6x1L)", price: 3.99, category: "groceries", subcategory: "beverages", image: "💧", discount: 0 },
-            { id: 175, name: "Energy Drink", price: 2.00, category: "groceries", subcategory: "beverages", image: "⚡", discount: 15 },
-            { id: 176, name: "Sports Drink", price: 2.75, category: "groceries", subcategory: "beverages", image: "🧃", discount: 0 },
+            { id: 169, name: "Orange Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "orange-juice.jpg", discount: 0 },
+            { id: 170, name: "Apple Juice (1L)", price: 3.25, category: "groceries", subcategory: "beverages", image: "apple-juice.jpg", discount: 5 },
+            { id: 171, name: "Coffee (250g)", price: 6.75, category: "groceries", subcategory: "beverages", image: "coffee.jpg", discount: 0 },
+            { id: 172, name: "Tea Bags (20 pack)", price: 3.50, category: "groceries", subcategory: "beverages", image: "tea-bags.jpg", discount: 10 },
+            { id: 173, name: "Soda (2L)", price: 2.50, category: "groceries", subcategory: "beverages", image: "soda.jpg", discount: 0 },
+            { id: 174, name: "Mineral Water (6x1L)", price: 3.99, category: "groceries", subcategory: "beverages", image: "water.jpg", discount: 0 },
+            { id: 175, name: "Energy Drink", price: 2.00, category: "groceries", subcategory: "beverages", image: "energy-drink.jpg", discount: 15 },
+            { id: 176, name: "Sports Drink", price: 2.75, category: "groceries", subcategory: "beverages", image: "sports-drink.jpg", discount: 0 },
             
             // Snacks
-            { id: 177, name: "Potato Chips", price: 2.50, category: "groceries", subcategory: "snacks", image: "🥔", discount: 0 },
-            { id: 178, name: "Chocolate Bar", price: 1.75, category: "groceries", subcategory: "snacks", image: "🍫", discount: 10 },
-            { id: 179, name: "Cookies (300g)", price: 3.25, category: "groceries", subcategory: "snacks", image: "🍪", discount: 0 },
-            { id: 180, name: "Popcorn", price: 2.00, category: "groceries", subcategory: "snacks", image: "🍿", discount: 0 },
-            { id: 181, name: "Nuts Mix (200g)", price: 5.50, category: "groceries", subcategory: "snacks", image: "🥜", discount: 12 },
-            { id: 182, name: "Granola Bars (6 pack)", price: 4.25, category: "groceries", subcategory: "snacks", image: "🍫", discount: 0 },
-            { id: 183, name: "Pretzels", price: 2.75, category: "groceries", subcategory: "snacks", image: "🥨", discount: 8 },
-            { id: 184, name: "Crackers", price: 2.25, category: "groceries", subcategory: "snacks", image: "🍘", discount: 0 }
+            { id: 177, name: "Potato Chips", price: 2.50, category: "groceries", subcategory: "snacks", image: "chips.jpg", discount: 0 },
+            { id: 178, name: "Chocolate Bar", price: 1.75, category: "groceries", subcategory: "snacks", image: "chocolate.jpg", discount: 10 },
+            { id: 179, name: "Cookies (300g)", price: 3.25, category: "groceries", subcategory: "snacks", image: "cookies.jpg", discount: 0 },
+            { id: 180, name: "Popcorn", price: 2.00, category: "groceries", subcategory: "snacks", image: "popcorn.jpg", discount: 0 },
+            { id: 181, name: "Nuts Mix (200g)", price: 5.50, category: "groceries", subcategory: "snacks", image: "nuts.jpg", discount: 12 },
+            { id: 182, name: "Granola Bars (6 pack)", price: 4.25, category: "groceries", subcategory: "snacks", image: "granola-bars.jpg", discount: 0 },
+            { id: 183, name: "Pretzels", price: 2.75, category: "groceries", subcategory: "snacks", image: "pretzels.jpg", discount: 8 },
+            { id: 184, name: "Crackers", price: 2.25, category: "groceries", subcategory: "snacks", image: "crackers.jpg", discount: 0 }
         ];
 
         // App state
@@ -267,7 +401,9 @@
             loadAllGroceries();
             setupEventListeners();
             loadFooter();
+            updateUserDisplay();
             updateCartCount();
+            setupLogoutButton();
         });
 
         // Load footer using JavaScript
@@ -279,6 +415,12 @@
                 })
                 .catch(error => {
                     console.error('Error loading footer:', error);
+                    // Create a simple footer if external file fails
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2023 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
                 });
         }
 
@@ -290,10 +432,26 @@
                 searchInput.addEventListener('input', handleSearch);
             }
 
+            // Header search functionality
+            const headerSearchInput = document.getElementById('search-input');
+            if (headerSearchInput) {
+                headerSearchInput.addEventListener('input', handleHeaderSearch);
+            }
+
             // Subcategory filters
             document.querySelectorAll('.subcategory').forEach(category => {
                 category.addEventListener('click', handleSubcategoryFilter);
             });
+        }
+
+        // Handle header search
+        function handleHeaderSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                // Redirect to all products page with search
+                window.location.href = `../all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
         }
 
         // Handle search
@@ -381,7 +539,7 @@
             createPaginationButtons(totalPages, paginationContainer);
         }
 
-        // Create product card
+        // Create product card with actual images
         function createProductCard(product) {
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -391,7 +549,10 @@
             
             card.innerHTML = `
                 ${product.discount > 0 ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
-                <div class="product-image">${product.image}</div>
+                <div class="product-image">
+                    <img src="../assets/products/${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}';">
+                </div>
                 <h3>${product.name}</h3>
                 <div class="product-price">
                     ${discountPrice ? 
@@ -413,15 +574,18 @@
         function createPaginationButtons(totalPages, paginationContainer) {
             paginationContainer.innerHTML = '';
             
+            if (totalPages <= 1) return;
+            
             // Previous button
             const prevButton = document.createElement('button');
             prevButton.className = 'page-btn';
-            prevButton.innerHTML = '&laquo;';
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
             prevButton.disabled = currentPage === 1;
             prevButton.addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(prevButton);
@@ -434,6 +598,7 @@
                 pageButton.addEventListener('click', () => {
                     currentPage = i;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
                 paginationContainer.appendChild(pageButton);
             }
@@ -441,12 +606,13 @@
             // Next button
             const nextButton = document.createElement('button');
             nextButton.className = 'page-btn';
-            nextButton.innerHTML = '&raquo;';
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
             nextButton.disabled = currentPage === totalPages;
             nextButton.addEventListener('click', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(nextButton);
@@ -487,14 +653,69 @@
             }
         }
 
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            const loginText = document.getElementById('login-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                // User is logged in
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+                
+                // Update login text to show user is logged in (for other pages)
+                if (loginText) {
+                    loginText.textContent = currentUser.name.split(' ')[0]; // First name only
+                }
+            } else {
+                // User is not logged in
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+                
+                if (loginText) {
+                    loginText.textContent = 'Login';
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            
+            // Show logout success message
+            alert('You have been logged out successfully!');
+            
+            // Refresh the page to update the UI
+            window.location.reload();
+        }
+
+        // Setup logout button event listener
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
         // Update cart count
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) {
-                cartCount.textContent = totalItems;
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
             }
         }
     </script>

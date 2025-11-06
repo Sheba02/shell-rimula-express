@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Product Image Styles */
+        .product-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
         .subcategories {
             display: flex;
             overflow-x: auto;
@@ -47,6 +71,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
+            z-index: 2;
         }
         
         .product-card {
@@ -87,6 +112,102 @@
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--light-gray);
         }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem 0;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Products Header */
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .category-title {
+            margin: 0;
+        }
+
+        .products-header .search-container {
+            flex: 1;
+            max-width: 300px;
+            margin-left: auto;
+        }
+
+        /* User Display Styles */
+        .logout-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e69500;
+        }
+
+        #welcome-text {
+            color: var(--primary);
+            font-weight: 500;
+            margin-right: 1rem;
+        }
+
+        #user-welcome {
+            display: none;
+            align-items: center;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        #auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -103,10 +224,23 @@
                 <input type="text" id="search-input" placeholder="Search for products...">
             </div>
             <div class="user-actions">
-                <a href="../login.html" id="nav-login">
-                    <i class="fas fa-user"></i>
-                    <span id="login-text">Login</span>
-                </a>
+                <div id="auth-buttons">
+                    <a href="../login.html" id="nav-login">
+                        <i class="fas fa-user"></i>
+                        <span id="login-text">Login</span>
+                    </a>
+                    <a href="../register.html" id="nav-register">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+                <div id="user-welcome" style="display: none;">
+                    <span id="welcome-text"></span>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
                 <a href="../cart.html" id="nav-cart">
                     <i class="fas fa-shopping-cart"></i>
                     Cart <span id="cart-count">0</span>
@@ -186,87 +320,87 @@
     <div id="footer"></div>
 
     <script>
-        // Extensive electronics product data
+        // Extensive electronics product data with actual image files
         const electronicsProducts = [
             // Smartphones
-            { id: 201, name: "iPhone 15 Pro", price: 999.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 10, specs: "6.1\" Super Retina, A17 Pro", rating: 4.8 },
-            { id: 202, name: "Samsung Galaxy S24", price: 849.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 15, specs: "6.2\" Dynamic AMOLED, Snapdragon", rating: 4.7 },
-            { id: 203, name: "Google Pixel 8", price: 699.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 12, specs: "6.2\" OLED, Tensor G3", rating: 4.6 },
-            { id: 204, name: "OnePlus 12", price: 799.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 8, specs: "6.7\" LTPO, Snapdragon 8 Gen 3", rating: 4.5 },
-            { id: 205, name: "Xiaomi 14", price: 599.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 20, specs: "6.36\" AMOLED, Snapdragon 8 Gen 3", rating: 4.4 },
-            { id: 206, name: "Samsung Galaxy A54", price: 449.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 15, specs: "6.4\" Super AMOLED, Exynos", rating: 4.3 },
-            { id: 207, name: "iPhone 14", price: 699.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 25, specs: "6.1\" Super Retina, A15 Bionic", rating: 4.7 },
-            { id: 208, name: "Google Pixel 7a", price: 499.99, category: "electronics", subcategory: "smartphones", image: "📱", discount: 18, specs: "6.1\" OLED, Tensor G2", rating: 4.5 },
+            { id: 201, name: "iPhone 15 Pro", price: 999.99, category: "electronics", subcategory: "smartphones", image: "iphone-15-pro.jpg", discount: 10, specs: "6.1\" Super Retina, A17 Pro", rating: 4.8 },
+            { id: 202, name: "Samsung Galaxy S24", price: 849.99, category: "electronics", subcategory: "smartphones", image: "samsung-s24.jpg", discount: 15, specs: "6.2\" Dynamic AMOLED, Snapdragon", rating: 4.7 },
+            { id: 203, name: "Google Pixel 8", price: 699.99, category: "electronics", subcategory: "smartphones", image: "pixel-8.jpg", discount: 12, specs: "6.2\" OLED, Tensor G3", rating: 4.6 },
+            { id: 204, name: "OnePlus 12", price: 799.99, category: "electronics", subcategory: "smartphones", image: "oneplus-12.jpg", discount: 8, specs: "6.7\" LTPO, Snapdragon 8 Gen 3", rating: 4.5 },
+            { id: 205, name: "Xiaomi 14", price: 599.99, category: "electronics", subcategory: "smartphones", image: "xiaomi-14.jpg", discount: 20, specs: "6.36\" AMOLED, Snapdragon 8 Gen 3", rating: 4.4 },
+            { id: 206, name: "Samsung Galaxy A54", price: 449.99, category: "electronics", subcategory: "smartphones", image: "samsung-a54.jpg", discount: 15, specs: "6.4\" Super AMOLED, Exynos", rating: 4.3 },
+            { id: 207, name: "iPhone 14", price: 699.99, category: "electronics", subcategory: "smartphones", image: "iphone-14.jpg", discount: 25, specs: "6.1\" Super Retina, A15 Bionic", rating: 4.7 },
+            { id: 208, name: "Google Pixel 7a", price: 499.99, category: "electronics", subcategory: "smartphones", image: "pixel-7a.jpg", discount: 18, specs: "6.1\" OLED, Tensor G2", rating: 4.5 },
             
             // Laptops
-            { id: 209, name: "MacBook Pro 14\"", price: 1999.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 12, specs: "M3 Pro, 16GB, 512GB SSD", rating: 4.9 },
-            { id: 210, name: "Dell XPS 13", price: 1299.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 15, specs: "Intel i7, 16GB, 512GB SSD", rating: 4.7 },
-            { id: 211, name: "HP Spectre x360", price: 1399.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 10, specs: "Intel i7, 16GB, 1TB SSD", rating: 4.6 },
-            { id: 212, name: "Lenovo ThinkPad X1", price: 1599.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 8, specs: "Intel i7, 16GB, 1TB SSD", rating: 4.8 },
-            { id: 213, name: "ASUS ZenBook 14", price: 999.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 20, specs: "AMD Ryzen 7, 16GB, 512GB", rating: 4.5 },
-            { id: 214, name: "Microsoft Surface Laptop 5", price: 1199.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 12, specs: "Intel i5, 8GB, 256GB SSD", rating: 4.6 },
-            { id: 215, name: "Acer Swift 3", price: 699.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 25, specs: "AMD Ryzen 5, 8GB, 256GB SSD", rating: 4.3 },
-            { id: 216, name: "MacBook Air 13\"", price: 1099.99, category: "electronics", subcategory: "laptops", image: "💻", discount: 10, specs: "M2, 8GB, 256GB SSD", rating: 4.8 },
+            { id: 209, name: "MacBook Pro 14\"", price: 1999.99, category: "electronics", subcategory: "laptops", image: "macbook-pro-14.jpg", discount: 12, specs: "M3 Pro, 16GB, 512GB SSD", rating: 4.9 },
+            { id: 210, name: "Dell XPS 13", price: 1299.99, category: "electronics", subcategory: "laptops", image: "dell-xps-13.jpg", discount: 15, specs: "Intel i7, 16GB, 512GB SSD", rating: 4.7 },
+            { id: 211, name: "HP Spectre x360", price: 1399.99, category: "electronics", subcategory: "laptops", image: "hp-spectre.jpg", discount: 10, specs: "Intel i7, 16GB, 1TB SSD", rating: 4.6 },
+            { id: 212, name: "Lenovo ThinkPad X1", price: 1599.99, category: "electronics", subcategory: "laptops", image: "thinkpad-x1.jpg", discount: 8, specs: "Intel i7, 16GB, 1TB SSD", rating: 4.8 },
+            { id: 213, name: "ASUS ZenBook 14", price: 999.99, category: "electronics", subcategory: "laptops", image: "asus-zenbook.jpg", discount: 20, specs: "AMD Ryzen 7, 16GB, 512GB", rating: 4.5 },
+            { id: 214, name: "Microsoft Surface Laptop 5", price: 1199.99, category: "electronics", subcategory: "laptops", image: "surface-laptop.jpg", discount: 12, specs: "Intel i5, 8GB, 256GB SSD", rating: 4.6 },
+            { id: 215, name: "Acer Swift 3", price: 699.99, category: "electronics", subcategory: "laptops", image: "acer-swift.jpg", discount: 25, specs: "AMD Ryzen 5, 8GB, 256GB SSD", rating: 4.3 },
+            { id: 216, name: "MacBook Air 13\"", price: 1099.99, category: "electronics", subcategory: "laptops", image: "macbook-air.jpg", discount: 10, specs: "M2, 8GB, 256GB SSD", rating: 4.8 },
             
             // Audio
-            { id: 217, name: "Sony WH-1000XM5", price: 399.99, category: "electronics", subcategory: "audio", image: "🎧", discount: 15, specs: "Noise Cancelling Headphones", rating: 4.8 },
-            { id: 218, name: "AirPods Pro (2nd Gen)", price: 249.99, category: "electronics", subcategory: "audio", image: "🎧", discount: 12, specs: "Wireless Earbuds with Case", rating: 4.7 },
-            { id: 219, name: "Bose QuietComfort 45", price: 329.99, category: "electronics", subcategory: "audio", image: "🎧", discount: 18, specs: "Noise Cancelling Headphones", rating: 4.6 },
-            { id: 220, name: "JBL Flip 6", price: 129.99, category: "electronics", subcategory: "audio", image: "🔊", discount: 20, specs: "Portable Bluetooth Speaker", rating: 4.5 },
-            { id: 221, name: "Sony SRS-XB43", price: 199.99, category: "electronics", subcategory: "audio", image: "🔊", discount: 15, specs: "Extra Bass Speaker", rating: 4.4 },
-            { id: 222, name: "Samsung Galaxy Buds2", price: 149.99, category: "electronics", subcategory: "audio", image: "🎧", discount: 25, specs: "Wireless Earbuds", rating: 4.3 },
-            { id: 223, name: "Beats Studio Pro", price: 349.99, category: "electronics", subcategory: "audio", image: "🎧", discount: 10, specs: "Wireless Headphones", rating: 4.5 },
-            { id: 224, name: "Sonos One", price: 219.99, category: "electronics", subcategory: "audio", image: "🔊", discount: 12, specs: "Smart Speaker with Alexa", rating: 4.7 },
+            { id: 217, name: "Sony WH-1000XM5", price: 399.99, category: "electronics", subcategory: "audio", image: "sony-headphones.jpg", discount: 15, specs: "Noise Cancelling Headphones", rating: 4.8 },
+            { id: 218, name: "AirPods Pro (2nd Gen)", price: 249.99, category: "electronics", subcategory: "audio", image: "airpods-pro.jpg", discount: 12, specs: "Wireless Earbuds with Case", rating: 4.7 },
+            { id: 219, name: "Bose QuietComfort 45", price: 329.99, category: "electronics", subcategory: "audio", image: "bose-headphones.jpg", discount: 18, specs: "Noise Cancelling Headphones", rating: 4.6 },
+            { id: 220, name: "JBL Flip 6", price: 129.99, category: "electronics", subcategory: "audio", image: "jbl-speaker.jpg", discount: 20, specs: "Portable Bluetooth Speaker", rating: 4.5 },
+            { id: 221, name: "Sony SRS-XB43", price: 199.99, category: "electronics", subcategory: "audio", image: "sony-speaker.jpg", discount: 15, specs: "Extra Bass Speaker", rating: 4.4 },
+            { id: 222, name: "Samsung Galaxy Buds2", price: 149.99, category: "electronics", subcategory: "audio", image: "samsung-buds.jpg", discount: 25, specs: "Wireless Earbuds", rating: 4.3 },
+            { id: 223, name: "Beats Studio Pro", price: 349.99, category: "electronics", subcategory: "audio", image: "beats-headphones.jpg", discount: 10, specs: "Wireless Headphones", rating: 4.5 },
+            { id: 224, name: "Sonos One", price: 219.99, category: "electronics", subcategory: "audio", image: "sonos-speaker.jpg", discount: 12, specs: "Smart Speaker with Alexa", rating: 4.7 },
             
             // Smart Home
-            { id: 225, name: "Amazon Echo Dot (5th Gen)", price: 49.99, category: "electronics", subcategory: "smart-home", image: "🏠", discount: 30, specs: "Smart speaker with Alexa", rating: 4.6 },
-            { id: 226, name: "Google Nest Hub", price: 89.99, category: "electronics", subcategory: "smart-home", image: "🏠", discount: 25, specs: "7\" Smart Display", rating: 4.5 },
-            { id: 227, name: "Ring Video Doorbell", price: 99.99, category: "electronics", subcategory: "smart-home", image: "🚪", discount: 20, specs: "1080p Video Doorbell", rating: 4.4 },
-            { id: 228, name: "Philips Hue Starter Kit", price: 199.99, category: "electronics", subcategory: "smart-home", image: "💡", discount: 15, specs: "Smart LED Bulbs (3-pack)", rating: 4.7 },
-            { id: 229, name: "Nest Learning Thermostat", price: 249.99, category: "electronics", subcategory: "smart-home", image: "🌡️", discount: 12, specs: "Smart Thermostat", rating: 4.8 },
-            { id: 230, name: "Arlo Pro 4", price: 199.99, category: "electronics", subcategory: "smart-home", image: "📹", discount: 18, specs: "2K Security Camera", rating: 4.5 },
-            { id: 231, name: "SmartThings Station", price: 79.99, category: "electronics", subcategory: "smart-home", image: "🏠", discount: 22, specs: "Smart Home Hub", rating: 4.3 },
-            { id: 232, name: "August Smart Lock", price: 229.99, category: "electronics", subcategory: "smart-home", image: "🔒", discount: 10, specs: "WiFi Smart Lock", rating: 4.6 },
+            { id: 225, name: "Amazon Echo Dot (5th Gen)", price: 49.99, category: "electronics", subcategory: "smart-home", image: "echo-dot.jpg", discount: 30, specs: "Smart speaker with Alexa", rating: 4.6 },
+            { id: 226, name: "Google Nest Hub", price: 89.99, category: "electronics", subcategory: "smart-home", image: "nest-hub.jpg", discount: 25, specs: "7\" Smart Display", rating: 4.5 },
+            { id: 227, name: "Ring Video Doorbell", price: 99.99, category: "electronics", subcategory: "smart-home", image: "ring-doorbell.jpg", discount: 20, specs: "1080p Video Doorbell", rating: 4.4 },
+            { id: 228, name: "Philips Hue Starter Kit", price: 199.99, category: "electronics", subcategory: "smart-home", image: "philips-hue.jpg", discount: 15, specs: "Smart LED Bulbs (3-pack)", rating: 4.7 },
+            { id: 229, name: "Nest Learning Thermostat", price: 249.99, category: "electronics", subcategory: "smart-home", image: "nest-thermostat.jpg", discount: 12, specs: "Smart Thermostat", rating: 4.8 },
+            { id: 230, name: "Arlo Pro 4", price: 199.99, category: "electronics", subcategory: "smart-home", image: "arlo-camera.jpg", discount: 18, specs: "2K Security Camera", rating: 4.5 },
+            { id: 231, name: "SmartThings Station", price: 79.99, category: "electronics", subcategory: "smart-home", image: "smartthings-hub.jpg", discount: 22, specs: "Smart Home Hub", rating: 4.3 },
+            { id: 232, name: "August Smart Lock", price: 229.99, category: "electronics", subcategory: "smart-home", image: "august-lock.jpg", discount: 10, specs: "WiFi Smart Lock", rating: 4.6 },
             
             // Gaming
-            { id: 233, name: "PlayStation 5", price: 499.99, category: "electronics", subcategory: "gaming", image: "🎮", discount: 0, specs: "Console with 1 Controller", rating: 4.9 },
-            { id: 234, name: "Xbox Series X", price: 499.99, category: "electronics", subcategory: "gaming", image: "🎮", discount: 5, specs: "1TB Console", rating: 4.8 },
-            { id: 235, name: "Nintendo Switch OLED", price: 349.99, category: "electronics", subcategory: "gaming", image: "🎮", discount: 8, specs: "Console with 7\" OLED Screen", rating: 4.7 },
-            { id: 236, name: "Steam Deck", price: 399.99, category: "electronics", subcategory: "gaming", image: "🎮", discount: 12, specs: "Handheld Gaming PC", rating: 4.6 },
-            { id: 237, name: "PlayStation VR2", price: 549.99, category: "electronics", subcategory: "gaming", image: "👓", discount: 15, specs: "Virtual Reality Headset", rating: 4.5 },
-            { id: 238, name: "Xbox Wireless Controller", price: 59.99, category: "electronics", subcategory: "gaming", image: "🎮", discount: 20, specs: "Wireless Gamepad", rating: 4.7 },
-            { id: 239, name: "NVIDIA GeForce RTX 4080", price: 1199.99, category: "electronics", subcategory: "gaming", image: "💻", discount: 8, specs: "16GB GDDR6X Graphics Card", rating: 4.8 },
-            { id: 240, name: "Razer BlackWidow V4", price: 189.99, category: "electronics", subcategory: "gaming", image: "⌨️", discount: 12, specs: "Mechanical Gaming Keyboard", rating: 4.6 },
+            { id: 233, name: "PlayStation 5", price: 499.99, category: "electronics", subcategory: "gaming", image: "ps5.jpg", discount: 0, specs: "Console with 1 Controller", rating: 4.9 },
+            { id: 234, name: "Xbox Series X", price: 499.99, category: "electronics", subcategory: "gaming", image: "xbox-series-x.jpg", discount: 5, specs: "1TB Console", rating: 4.8 },
+            { id: 235, name: "Nintendo Switch OLED", price: 349.99, category: "electronics", subcategory: "gaming", image: "switch-oled.jpg", discount: 8, specs: "Console with 7\" OLED Screen", rating: 4.7 },
+            { id: 236, name: "Steam Deck", price: 399.99, category: "electronics", subcategory: "gaming", image: "steam-deck.jpg", discount: 12, specs: "Handheld Gaming PC", rating: 4.6 },
+            { id: 237, name: "PlayStation VR2", price: 549.99, category: "electronics", subcategory: "gaming", image: "psvr2.jpg", discount: 15, specs: "Virtual Reality Headset", rating: 4.5 },
+            { id: 238, name: "Xbox Wireless Controller", price: 59.99, category: "electronics", subcategory: "gaming", image: "xbox-controller.jpg", discount: 20, specs: "Wireless Gamepad", rating: 4.7 },
+            { id: 239, name: "NVIDIA GeForce RTX 4080", price: 1199.99, category: "electronics", subcategory: "gaming", image: "rtx-4080.jpg", discount: 8, specs: "16GB GDDR6X Graphics Card", rating: 4.8 },
+            { id: 240, name: "Razer BlackWidow V4", price: 189.99, category: "electronics", subcategory: "gaming", image: "razer-keyboard.jpg", discount: 12, specs: "Mechanical Gaming Keyboard", rating: 4.6 },
             
             // Accessories
-            { id: 241, name: "Apple AirTag (4 Pack)", price: 99.99, category: "electronics", subcategory: "accessories", image: "📱", discount: 15, specs: "Item Tracker", rating: 4.5 },
-            { id: 242, name: "Anker PowerCore 26800", price: 79.99, category: "electronics", subcategory: "accessories", image: "🔋", discount: 25, specs: "26800mAh Power Bank", rating: 4.7 },
-            { id: 243, name: "Samsung 1TB SSD", price: 129.99, category: "electronics", subcategory: "accessories", image: "💾", discount: 20, specs: "Portable SSD T7", rating: 4.8 },
-            { id: 244, name: "Logitech MX Master 3S", price: 99.99, category: "electronics", subcategory: "accessories", image: "🖱️", discount: 18, specs: "Wireless Mouse", rating: 4.7 },
-            { id: 245, name: "Apple Magic Keyboard", price: 179.99, category: "electronics", subcategory: "accessories", image: "⌨️", discount: 10, specs: "Wireless Keyboard", rating: 4.6 },
-            { id: 246, name: "Dell 27\" 4K Monitor", price: 399.99, category: "electronics", subcategory: "accessories", image: "🖥️", discount: 15, specs: "U2723QE Ultrasharp", rating: 4.8 },
-            { id: 247, name: "Belkin BoostCharge Pro", price: 39.99, category: "electronics", subcategory: "accessories", image: "🔌", discount: 30, specs: "3-in-1 Wireless Charger", rating: 4.4 },
-            { id: 248, name: "UGREEN 100W USB-C Cable", price: 24.99, category: "electronics", subcategory: "accessories", image: "🔌", discount: 35, specs: "Nylon Braided Cable", rating: 4.6 },
+            { id: 241, name: "Apple AirTag (4 Pack)", price: 99.99, category: "electronics", subcategory: "accessories", image: "airtags.jpg", discount: 15, specs: "Item Tracker", rating: 4.5 },
+            { id: 242, name: "Anker PowerCore 26800", price: 79.99, category: "electronics", subcategory: "accessories", image: "anker-powerbank.jpg", discount: 25, specs: "26800mAh Power Bank", rating: 4.7 },
+            { id: 243, name: "Samsung 1TB SSD", price: 129.99, category: "electronics", subcategory: "accessories", image: "samsung-ssd.jpg", discount: 20, specs: "Portable SSD T7", rating: 4.8 },
+            { id: 244, name: "Logitech MX Master 3S", price: 99.99, category: "electronics", subcategory: "accessories", image: "logitech-mouse.jpg", discount: 18, specs: "Wireless Mouse", rating: 4.7 },
+            { id: 245, name: "Apple Magic Keyboard", price: 179.99, category: "electronics", subcategory: "accessories", image: "magic-keyboard.jpg", discount: 10, specs: "Wireless Keyboard", rating: 4.6 },
+            { id: 246, name: "Dell 27\" 4K Monitor", price: 399.99, category: "electronics", subcategory: "accessories", image: "dell-monitor.jpg", discount: 15, specs: "U2723QE Ultrasharp", rating: 4.8 },
+            { id: 247, name: "Belkin BoostCharge Pro", price: 39.99, category: "electronics", subcategory: "accessories", image: "belkin-charger.jpg", discount: 30, specs: "3-in-1 Wireless Charger", rating: 4.4 },
+            { id: 248, name: "UGREEN 100W USB-C Cable", price: 24.99, category: "electronics", subcategory: "accessories", image: "ugreen-cable.jpg", discount: 35, specs: "Nylon Braided Cable", rating: 4.6 },
             
             // Wearables
-            { id: 249, name: "Apple Watch Series 9", price: 399.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 12, specs: "45mm GPS", rating: 4.8 },
-            { id: 250, name: "Samsung Galaxy Watch 6", price: 299.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 18, specs: "44mm Bluetooth", rating: 4.7 },
-            { id: 251, name: "Fitbit Charge 6", price: 159.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 22, specs: "Fitness Tracker", rating: 4.5 },
-            { id: 252, name: "Garmin Forerunner 265", price: 449.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 10, specs: "GPS Running Watch", rating: 4.8 },
-            { id: 253, name: "Oura Ring Gen 3", price: 299.99, category: "electronics", subcategory: "wearables", image: "💍", discount: 15, specs: "Heritage Smart Ring", rating: 4.6 },
-            { id: 254, name: "Amazfit GTS 4", price: 199.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 25, specs: "Smart Watch", rating: 4.3 },
-            { id: 255, name: "Withings ScanWatch", price: 279.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 12, specs: "Hybrid Smartwatch", rating: 4.5 },
-            { id: 256, name: "Apple Watch SE (2nd Gen)", price: 249.99, category: "electronics", subcategory: "wearables", image: "⌚", discount: 20, specs: "40mm GPS", rating: 4.6 },
+            { id: 249, name: "Apple Watch Series 9", price: 399.99, category: "electronics", subcategory: "wearables", image: "apple-watch.jpg", discount: 12, specs: "45mm GPS", rating: 4.8 },
+            { id: 250, name: "Samsung Galaxy Watch 6", price: 299.99, category: "electronics", subcategory: "wearables", image: "galaxy-watch.jpg", discount: 18, specs: "44mm Bluetooth", rating: 4.7 },
+            { id: 251, name: "Fitbit Charge 6", price: 159.99, category: "electronics", subcategory: "wearables", image: "fitbit-charge.jpg", discount: 22, specs: "Fitness Tracker", rating: 4.5 },
+            { id: 252, name: "Garmin Forerunner 265", price: 449.99, category: "electronics", subcategory: "wearables", image: "garmin-watch.jpg", discount: 10, specs: "GPS Running Watch", rating: 4.8 },
+            { id: 253, name: "Oura Ring Gen 3", price: 299.99, category: "electronics", subcategory: "wearables", image: "oura-ring.jpg", discount: 15, specs: "Heritage Smart Ring", rating: 4.6 },
+            { id: 254, name: "Amazfit GTS 4", price: 199.99, category: "electronics", subcategory: "wearables", image: "amazfit-watch.jpg", discount: 25, specs: "Smart Watch", rating: 4.3 },
+            { id: 255, name: "Withings ScanWatch", price: 279.99, category: "electronics", subcategory: "wearables", image: "withings-watch.jpg", discount: 12, specs: "Hybrid Smartwatch", rating: 4.5 },
+            { id: 256, name: "Apple Watch SE (2nd Gen)", price: 249.99, category: "electronics", subcategory: "wearables", image: "apple-watch-se.jpg", discount: 20, specs: "40mm GPS", rating: 4.6 },
             
             // Cameras
-            { id: 257, name: "Sony A7 IV", price: 2499.99, category: "electronics", subcategory: "cameras", image: "📷", discount: 8, specs: "Full-Frame Mirrorless", rating: 4.9 },
-            { id: 258, name: "Canon EOS R6 Mark II", price: 2499.99, category: "electronics", subcategory: "cameras", image: "📷", discount: 10, specs: "Full-Frame Mirrorless", rating: 4.8 },
-            { id: 259, name: "Fujifilm X-T5", price: 1699.99, category: "electronics", subcategory: "cameras", image: "📷", discount: 12, specs: "APS-C Mirrorless", rating: 4.7 },
-            { id: 260, name: "GoPro HERO12 Black", price: 399.99, category: "electronics", subcategory: "cameras", image: "📹", discount: 15, specs: "Action Camera", rating: 4.6 },
-            { id: 261, name: "DJI Mini 3 Pro", price: 759.99, category: "electronics", subcategory: "cameras", image: "🚁", discount: 18, specs: "Drone with 4K Camera", rating: 4.8 },
-            { id: 262, name: "Insta360 X3", price: 449.99, category: "electronics", subcategory: "cameras", image: "📹", discount: 20, specs: "360 Action Camera", rating: 4.5 },
-            { id: 263, name: "Sony ZV-1", price: 749.99, category: "electronics", subcategory: "cameras", image: "📷", discount: 22, specs: "Vlogging Camera", rating: 4.6 },
-            { id: 264, name: "Canon PowerShot G7 X III", price: 749.99, category: "electronics", subcategory: "cameras", image: "📷", discount: 15, specs: "Compact Camera", rating: 4.5 }
+            { id: 257, name: "Sony A7 IV", price: 2499.99, category: "electronics", subcategory: "cameras", image: "sony-a7iv.jpg", discount: 8, specs: "Full-Frame Mirrorless", rating: 4.9 },
+            { id: 258, name: "Canon EOS R6 Mark II", price: 2499.99, category: "electronics", subcategory: "cameras", image: "canon-r6.jpg", discount: 10, specs: "Full-Frame Mirrorless", rating: 4.8 },
+            { id: 259, name: "Fujifilm X-T5", price: 1699.99, category: "electronics", subcategory: "cameras", image: "fujifilm-xt5.jpg", discount: 12, specs: "APS-C Mirrorless", rating: 4.7 },
+            { id: 260, name: "GoPro HERO12 Black", price: 399.99, category: "electronics", subcategory: "cameras", image: "gopro-hero12.jpg", discount: 15, specs: "Action Camera", rating: 4.6 },
+            { id: 261, name: "DJI Mini 3 Pro", price: 759.99, category: "electronics", subcategory: "cameras", image: "dji-mini3.jpg", discount: 18, specs: "Drone with 4K Camera", rating: 4.8 },
+            { id: 262, name: "Insta360 X3", price: 449.99, category: "electronics", subcategory: "cameras", image: "insta360-x3.jpg", discount: 20, specs: "360 Action Camera", rating: 4.5 },
+            { id: 263, name: "Sony ZV-1", price: 749.99, category: "electronics", subcategory: "cameras", image: "sony-zv1.jpg", discount: 22, specs: "Vlogging Camera", rating: 4.6 },
+            { id: 264, name: "Canon PowerShot G7 X III", price: 749.99, category: "electronics", subcategory: "cameras", image: "canon-g7x.jpg", discount: 15, specs: "Compact Camera", rating: 4.5 }
         ];
 
         // App state
@@ -281,7 +415,9 @@
             loadAllElectronics();
             setupEventListeners();
             loadFooter();
+            updateUserDisplay();
             updateCartCount();
+            setupLogoutButton();
         });
 
         // Load footer using JavaScript
@@ -293,6 +429,12 @@
                 })
                 .catch(error => {
                     console.error('Error loading footer:', error);
+                    // Create a simple footer if external file fails
+                    document.getElementById('footer').innerHTML = `
+                        <footer style="background: #333; color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+                            <p>&copy; 2023 Shell Rimula Express Supermarket. All rights reserved.</p>
+                        </footer>
+                    `;
                 });
         }
 
@@ -304,10 +446,26 @@
                 searchInput.addEventListener('input', handleSearch);
             }
 
+            // Header search functionality
+            const headerSearchInput = document.getElementById('search-input');
+            if (headerSearchInput) {
+                headerSearchInput.addEventListener('input', handleHeaderSearch);
+            }
+
             // Subcategory filters
             document.querySelectorAll('.subcategory').forEach(category => {
                 category.addEventListener('click', handleSubcategoryFilter);
             });
+        }
+
+        // Handle header search
+        function handleHeaderSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            if (searchTerm) {
+                // Redirect to all products page with search
+                window.location.href = `../all-products.html?search=${encodeURIComponent(searchTerm)}`;
+            }
         }
 
         // Load featured products
@@ -418,7 +576,7 @@
             createPaginationButtons(totalPages, paginationContainer);
         }
 
-        // Create product card
+        // Create product card with actual images
         function createProductCard(product) {
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -431,7 +589,10 @@
             
             card.innerHTML = `
                 ${product.discount > 0 ? `<div class="deal-badge">${product.discount}% OFF</div>` : ''}
-                <div class="product-image">${product.image}</div>
+                <div class="product-image">
+                    <img src="../assets/products/${product.image}" alt="${product.name}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}';">
+                </div>
                 <h3>${product.name}</h3>
                 <div class="product-specs">${product.specs}</div>
                 <div class="rating">${stars} ${product.rating}</div>
@@ -455,15 +616,18 @@
         function createPaginationButtons(totalPages, paginationContainer) {
             paginationContainer.innerHTML = '';
             
+            if (totalPages <= 1) return;
+            
             // Previous button
             const prevButton = document.createElement('button');
             prevButton.className = 'page-btn';
-            prevButton.innerHTML = '&laquo;';
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
             prevButton.disabled = currentPage === 1;
             prevButton.addEventListener('click', () => {
                 if (currentPage > 1) {
                     currentPage--;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(prevButton);
@@ -476,6 +640,7 @@
                 pageButton.addEventListener('click', () => {
                     currentPage = i;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
                 paginationContainer.appendChild(pageButton);
             }
@@ -483,12 +648,13 @@
             // Next button
             const nextButton = document.createElement('button');
             nextButton.className = 'page-btn';
-            nextButton.innerHTML = '&raquo;';
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
             nextButton.disabled = currentPage === totalPages;
             nextButton.addEventListener('click', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
                     loadFilteredProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
             paginationContainer.appendChild(nextButton);
@@ -529,16 +695,71 @@
             }
         }
 
+        // Update user display based on login status
+        function updateUserDisplay() {
+            const authButtons = document.getElementById('auth-buttons');
+            const userWelcome = document.getElementById('user-welcome');
+            const welcomeText = document.getElementById('welcome-text');
+            const loginText = document.getElementById('login-text');
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            
+            if (currentUser && currentUser.name) {
+                // User is logged in
+                authButtons.style.display = 'none';
+                userWelcome.style.display = 'flex';
+                welcomeText.textContent = `Welcome, ${currentUser.name}`;
+                
+                // Update login text to show user is logged in (for other pages)
+                if (loginText) {
+                    loginText.textContent = currentUser.name.split(' ')[0]; // First name only
+                }
+            } else {
+                // User is not logged in
+                authButtons.style.display = 'flex';
+                userWelcome.style.display = 'none';
+                
+                if (loginText) {
+                    loginText.textContent = 'Login';
+                }
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            updateCartCount();
+            
+            // Show logout success message
+            alert('You have been logged out successfully!');
+            
+            // Refresh the page to update the UI
+            window.location.reload();
+        }
+
+        // Setup logout button event listener
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', logout);
+            }
+        }
+
         // Update cart count
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) {
-                cartCount.textContent = totalItems;
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
             }
         }
     </script>
 </body>
-</html>s
+</html>
